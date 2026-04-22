@@ -1,0 +1,292 @@
+# FinSight Wealth Management
+## CLIENT ADVISORY REPORT
+
+---
+
+**Client:** Omar Nasser | **Client ID:** CUS-0017
+**Advisor Tier:** Elite | **Risk Profile:** Aggressive
+**Report Date:** April 22, 2026
+**Report Classification:** Confidential — For Authorized Recipient Only
+
+---
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Mr. Nasser's portfolio stands at a current market value of **$263,825.63**, reflecting exceptional long-term capital appreciation driven primarily by early-entry positions in Bitcoin and Ethereum. Total unrealized gains of **$220,925.63**, combined with realized gains of **$4,440.00**, produce a **net P&L of $224,265.63** — a result that reflects the substantial upside potential that accompanied Mr. Nasser's high-conviction, early-stage crypto commitments.
+
+Net worth, after accounting for the outstanding personal loan balance of **$54,000.00**, stands at **$228,825.63**.
+
+While the portfolio's absolute performance is a standout achievement, the concentration structure presents a material and unresolved compliance concern: crypto assets currently constitute **93.20%** of portfolio value — nearly **double** the 50% ceiling permitted under an aggressive risk classification. This breach has been flagged repeatedly and remains open. It is the central issue requiring immediate advisory attention.
+
+| Metric | Value |
+|---|---|
+| Portfolio Value | $263,825.63 |
+| Net Worth | $228,825.63 |
+| Cash Balance | $19,000.00 |
+| Unrealized P&L | $220,925.63 |
+| Realized P&L | $4,440.00 |
+| **Net P&L (Total)** | **$224,265.63** |
+| Interest Paid YTD | $1,100.00 |
+| Loan Outstanding | $54,000.00 |
+| Annualized Return | Not available |
+| S&P 500 Benchmark | Not available |
+
+> ⚠️ **Note:** Annualized return and benchmark comparison data were unavailable at the time of report generation. These metrics will be included once data is reconciled.
+
+---
+
+---
+
+## 2. PORTFOLIO PERFORMANCE BY ASSET CLASS
+
+### 2.1 Overall Allocation Snapshot
+
+| Asset Class | Current Value | Portfolio Weight | Profile Limit |
+|---|---|---|---|
+| Cryptocurrency | $245,836.43 | 93.20% | 50.00% |
+| Equities (Stocks) | $17,989.20 | 6.80% | — |
+| ETFs | $0.00 | 0.00% | — |
+| Cash | $19,000.00 | 7.20% | — |
+
+> *Note: Cash weight is calculated against total portfolio value. Percentages reflect live prices sourced from yfinance as of report date.*
+
+---
+
+### 2.2 Individual Holdings Detail
+
+#### 🟠 Bitcoin (BTC) — Cryptocurrency
+| Field | Value |
+|---|---|
+| Quantity Held | 3.000000 BTC |
+| Average Buy Price | $8,500.00 |
+| Current Price | $77,955.99 |
+| Current Value | $233,867.98 |
+| Unrealized P&L | +$208,367.98 |
+| Return on Position | **+817.13%** |
+| Purchase Date | December 2019 |
+
+Bitcoin is by far the dominant holding and the primary driver of portfolio performance. An initial investment of **$25,500.00** in December 2019 has grown to **$233,867.98**, an appreciation of over eight times the original capital. This position alone accounts for **88.6%** of total portfolio market value.
+
+---
+
+#### 🔵 Ethereum (ETH) — Cryptocurrency
+| Field | Value |
+|---|---|
+| Quantity Held | 5.000000 ETH |
+| Average Buy Price | $240.00 |
+| Current Price | $2,393.69 |
+| Current Value | $11,968.45 |
+| Unrealized P&L | +$10,768.45 |
+| Return on Position | **+897.37%** |
+| Original Purchase | January 2020 (6.5 ETH @ $240.00) |
+| Partial Sale | January 2024 (1.5 ETH sold @ $3,200.00 = $4,800.00 realized) |
+
+Ethereum has delivered the highest percentage return of any holding in the portfolio. The January 2024 partial sale of 1.5 ETH at $3,200.00 locked in **$4,800.00** in realized gains. The current average cost basis of $240.00 reflects the original entry price across the full original position.
+
+---
+
+#### 🟢 NVIDIA Corporation (NVDA) — Equity
+| Field | Value |
+|---|---|
+| Quantity Held | 90 shares |
+| Average Buy Price | $180.00 |
+| Current Price | $199.88 |
+| Current Value | $17,989.20 |
+| Unrealized P&L | +$1,789.20 |
+| Return on Position | **+11.04%** |
+| Purchase Date | November 2019 |
+
+NVDA represents the portfolio's sole equity holding. While the absolute return of 11.04% is modest relative to the crypto positions, it provides partial exposure to a regulated, liquid asset class. The position was established in November 2019 and has remained intact.
+
+> ⚠️ **Note:** A transaction record shows a purchase of 30 shares of **MSFT (Microsoft)** on March 25, 2024 at $415.00 (total: $12,450.00). However, no MSFT position appears in the current holdings. This may indicate the position was subsequently liquidated, or there is a data reconciliation discrepancy. **Clarification from the back office is recommended before the next report cycle.**
+
+---
+
+### 2.3 Realized Gains Summary
+
+| Transaction | Date | Details | Proceeds |
+|---|---|---|---|
+| ETH Partial Sale | Jan 20, 2024 | 1.5 ETH @ $3,200.00 | $4,800.00 |
+| Cost Basis (1.5 ETH @ $240.00) | — | — | ($360.00) |
+| **Realized Gain** | — | — | **$4,440.00** |
+
+---
+
+---
+
+## 3. RISK ASSESSMENT
+
+### 3.1 Concentration Risk — CRITICAL BREACH
+
+This section carries the highest advisory priority in this report.
+
+| Risk Parameter | Current Exposure | Allowed Maximum (Aggressive) | Breach Magnitude |
+|---|---|---|---|
+| Cryptocurrency Allocation | **93.20%** | **50.00%** | **+43.20 percentage points** |
+
+Mr. Nasser's cryptocurrency exposure exceeds the maximum permissible limit for an **aggressive** risk profile by **43.20 percentage points**. For context, this limit is already the most permissive tier available on the FinSight platform — conservative clients are capped at 10% and moderate clients at 25%. Even against the most risk-tolerant classification, this portfolio is significantly out of bounds.
+
+**Implication:** At this concentration level, a 50% drawdown in cryptocurrency markets — which has occurred multiple times historically in Bitcoin and Ethereum — would reduce portfolio value by approximately **$122,918** from the crypto holdings alone, bringing total portfolio value to roughly **$140,907** before accounting for the equity position. Such a drawdown would also materially impair net worth and the ability to service the outstanding personal loan.
+
+---
+
+### 3.2 Risk Profile Alignment Summary
+
+| Category | Assessment |
+|---|---|
+| Crypto Concentration | 🔴 CRITICAL — 43.2pp above limit |
+| Equity Exposure | 🟡 LOW — Single stock (NVDA), no diversification |
+| ETF Exposure | 🔴 NONE — Zero allocation |
+| Cash Liquidity | 🟡 MODERATE — $19,000 cash on hand |
+| Loan-to-Portfolio Ratio | 🟡 MODERATE — 20.5% ($54,000 / $263,825) |
+| Asset Diversification | 🔴 POOR — 3 holdings across 2 asset classes |
+
+---
+
+### 3.3 Liquidity Consideration
+
+Cash on hand of **$19,000.00** is sufficient to cover approximately **19.5 months** of loan EMI payments ($975.45/month) in a worst-case scenario where portfolio liquidation was required. This provides a reasonable short-term liquidity buffer, though it does not offset the concentration risk described above.
+
+---
+
+---
+
+## 4. MARKET INSIGHTS — ML PREDICTIONS (5-DAY OUTLOOK)
+
+The following short-term directional signals are generated by the FinSight ML prediction engine. These are **probabilistic indicators only** and do not constitute guaranteed forecasts. They should be interpreted alongside broader market context and not used as standalone trading signals.
+
+| Asset | Current Price | 5-Day Predicted Move | Signal |
+|---|---|---|---|
+| BTC | $77,955.99 | **+0.07%** | ↗ Marginally Positive |
+| NVDA | $199.88 | **-0.73%** | ↘ Mild Softness |
+| ETH | $2,393.69 | **-3.21%** | ↘ Notable Near-Term Weakness |
+
+### Key Observations:
+
+**Bitcoin (BTC):** The model projects a near-flat 5-day outlook (+0.07%), suggesting short-term price stability. Given BTC's dominance in the portfolio, even marginal positive movement translates to meaningful dollar impact. This signal does not suggest an imminent catalyst for significant gain or loss in the near term.
+
+**Ethereum (ETH):** The model's projection of **-3.21%** over five days represents the most notable near-term signal in the portfolio. A move of this magnitude on the current ETH position ($11,968.45) would represent an approximate **$384 decline** in ETH market value. While manageable in absolute terms, it reinforces the value of monitoring this position closely, particularly in the context of rebalancing decisions.
+
+**NVIDIA (NVDA):** A projected -0.73% decline over 5 days on an $17,989.20 position implies a potential near-term move of approximately **-$131** in value — a minor impact. No immediate action is indicated by this signal alone.
+
+> **Important Caveat:** Short-term ML predictions carry inherent uncertainty and should not be the sole basis for any buy or sell decision. Past model performance does not guarantee future accuracy.
+
+---
+
+---
+
+## 5. LOAN & DEBT SUMMARY
+
+### 5.1 Outstanding Loan Detail
+
+| Parameter | Detail |
+|---|---|
+| Loan Type | Personal Loan |
+| Outstanding Balance | $54,000.00 |
+| Interest Rate | 5.80% per annum |
+| Monthly EMI | $975.45 |
+| Current Status | ✅ Current (in good standing) |
+| Interest Paid YTD | $1,100.00 |
+
+### 5.2 Debt-to-Portfolio Analysis
+
+| Metric | Value |
+|---|---|
+| Loan-to-Portfolio Ratio | 20.47% |
+| Loan-to-Net Worth Ratio | 23.60% |
+| EMI Coverage (Cash / Monthly EMI) | ~19.5 months |
+| Annual Debt Service Cost | ~$11,705 (estimated) |
+
+### 5.3 Commentary
+
+The personal loan is current and presents no immediate servicing concern. At 5.80% annual interest, the cost of carry remains manageable relative to the portfolio's total appreciation. However, the relationship between the loan and the portfolio's concentrated, volatile asset base warrants attention: **should cryptocurrency markets experience a significant correction, the ability to service this debt could come under pressure if cash reserves are drawn down.**
+
+The $19,000 cash balance provides meaningful near-term debt coverage and should be preserved as a priority buffer. There is no indication based on available data that the loan is margin-linked or secured against portfolio assets, but this should be confirmed with the client's lending documentation.
+
+---
+
+---
+
+## 6. ALERTS & ACTIONS REQUIRED
+
+### 6.1 Open Alert Summary
+
+| Priority | Alert Type | Description | Status | Count |
+|---|---|---|---|---|
+| 🔴 HIGH | Risk Breach | Crypto exposure (93.20%) exceeds aggressive profile limit (50.00%) by 43.20pp | **OPEN** | 10 |
+
+### 6.2 Alert Analysis
+
+The system has logged **10 consecutive identical HIGH-priority risk breach alerts**, all flagging the same cryptocurrency over-concentration issue. The persistence and volume of this alert indicates the condition has existed for an extended period without remediation. This is a significant compliance and advisory concern.
+
+**Action Required:**
+- This alert must not continue to be deferred. The advisor and client must formally address this breach at the earliest opportunity.
+- A documented client acknowledgment or a formal rebalancing plan must be established to satisfy risk compliance requirements.
+- If Mr. Nasser has been informed of this breach and elected to maintain the position, this election must be documented in accordance with FinSight's risk override policy.
+
+---
+
+---
+
+## 7. RECOMMENDATIONS
+
+The following recommendations are grounded strictly in the data provided. They are prioritized by urgency.
+
+---
+
+### Recommendation 1 — URGENT: Initiate Cryptocurrency Rebalancing Plan
+**Priority:** 🔴 Critical | **Category:** Risk Management
+
+The 93.20% crypto allocation must be addressed immediately to bring the portfolio into compliance with the 50% aggressive profile ceiling. To achieve compliance, approximately **$113,000–$114,000** in crypto value would need to be reallocated to other asset classes, assuming no change in total portfolio value.
+
+**Suggested approach:** Rather than a single liquidation event, consider a structured, phased reduction strategy — for example, trimming BTC or ETH in tranches over 60–90 days. This approach reduces timing risk while demonstrating a good-faith effort toward compliance. Any proceeds from rebalancing should be directed toward diversified equity positions or ETFs (see Recommendation 2).
+
+**Note on tax implications:** Given the magnitude of unrealized gains (BTC: +$208,367; ETH: +$10,768), any liquidation will trigger a taxable event. The client should consult with a qualified tax advisor before executing any significant rebalancing. This advisory report does not constitute tax advice.
+
+---
+
+### Recommendation 2 — Establish Diversified ETF Exposure
+**Priority:** 🟠 High | **Category:** Portfolio Diversification
+
+The portfolio currently holds **zero ETF exposure**. For a client of this wealth level with demonstrated long-term investment discipline, broad-market ETF exposure (e.g., S&P 500 index funds, technology-sector ETFs, or diversified international ETFs) would provide:
+- Reduced single-asset concentration risk
+- Regulated, liquid asset exposure
+- A natural destination for capital redeployed from crypto rebalancing
+
+Redeploying a portion of rebalancing proceeds into ETFs would meaningfully improve the risk-adjusted structure of the portfolio without sacrificing growth orientation.
+
+---
+
+### Recommendation 3 — Resolve MSFT Transaction Discrepancy
+**Priority:** 🟡 Moderate | **Category:** Portfolio Administration & Recordkeeping
+
+Transaction history records a purchase of **30 shares of Microsoft (MSFT) at $415.00** on March 25, 2024 ($12,450.00 total), but no MSFT position appears in current holdings. This gap requires resolution:
+
+- If MSFT was sold, the realized gain or loss must be captured and verified in P&L records.
+- If this is a data error, it must be corrected to ensure reporting accuracy.
+
+The back-office reconciliation team should investigate and resolve this discrepancy before the next report cycle.
+
+---
+
+### Recommendation 4 — Preserve and Protect Cash Liquidity Buffer
+**Priority:** 🟡 Moderate | **Category:** Liquidity Management
+
+The current cash balance of **$19,000.00** provides approximately 19.5 months of EMI coverage and represents a critical liquidity buffer given the portfolio's concentration in volatile assets. It is recommended that:
+
+- A minimum cash floor of **$12,000–$15,000** be formally established as an operational reserve.
+- The balance above this floor may be available for deployment, but should not be reduced below this threshold absent a formal liquidity plan.
+
+---
+
+### Recommendation 5 — Schedule Formal Annual Review with Tax Advisor
+**Priority:** 🟡 Moderate | **Category:** Holistic Financial Planning
+
+Given the scale of unrealized capital gains ($220,925.63), the outstanding loan, and the need for rebalancing, a formal annual review session involving both the FinSight advisor and an independent tax professional is strongly advised. Key topics for that session should include:
+
+- Tax-efficient sequencing of any crypto liquidation events
+- Review of loan terms and potential early payoff scenario analysis
+- Updated risk profile assessment to formally document Mr. Nasser's intentions regarding concentration
+- Bench

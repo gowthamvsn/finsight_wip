@@ -1,0 +1,599 @@
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../App'
+import { apiFetch } from '../api/client'
+import LivePriceBadge from '../components/LivePriceBadge'
+import { useLivePrices } from '../hooks/useLivePrices'
+import TransactionModal from '../components/TransactionModal'
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+function fmt(n, decimals = 0) {
+  if (n == null) return '—'
+  return Number(n).toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
+}
+
+function fmtUSD(n) {
+  return n == null ? '—' : `$${fmt(n)}`
+}
+
+function ago(ts) {
+  if (!ts) return ''
+  const d = (Date.now() - new Date(ts)) / 1000
+  if (d < 60) return `${Math.round(d)}s ago`
+  if (d < 3600) return `${Math.round(d / 60)}m ago`
+  return `${Math.round(d / 3600)}h ago`
+}
+
+// ─── Sub-components ──────────────────────────────────────────────────────────
+
+function RiskBadge({ profile }) {
+  const colors = {
+    conservative: 'bg-blue-900 text-blue-300',
+    moderate: 'bg-purple-900 text-purple-300',
+    aggressive: 'bg-red-900 text-red-300',
+  }
+  return (
+    <span className={`px-2 py-0.5 rounded text-xs font-medium ${colors[profile] || 'bg-gray-700 text-gray-300'}`}>
+      {profile}
+    </span>
+  )
+}
+
+function SevBadge({ severity }) {
+  const colors = {
+    critical: 'bg-red-900 text-red-300',
+    high: 'bg-orange-900 text-orange-300',
+    medium: 'bg-yellow-900 text-yellow-300',
+    low: 'bg-blue-900 text-blue-300',
+  }
+  return (
+    <span className={`px-2 py-0.5 rounded text-xs ${colors[severity] || 'bg-gray-700 text-gray-300'}`}>
+      {severity}
+    </span>
+  )
+}
+
+function SignalBadge({ signal }) {
+  const colors = {
+    'strong buy': 'bg-emerald-900 text-emerald-300',
+    buy: 'bg-green-900 text-green-300',
+    neutral: 'bg-gray-700 text-gray-300',
+    caution: 'bg-red-900 text-red-300',
+  }
+  return (
+    <span className={`px-2 py-0.5 rounded text-xs ${colors[signal] || 'bg-gray-700 text-gray-300'}`}>
+      {signal}
+    </span>
+  )
+}
+
+// ─── Support Chat Widget ──────────────────────────────────────────────────────
+
+function SupportChat({ customerId, token }) {
+  const [open, setOpen] = useState(false)
+  const [messages, setMessages] = useState([
+    { role: 'assistant', text: 'Hi! I\'m your Portfolio Assistant. Ask me anything about your investments.' },
+  ])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const bottomRef = useRef(null)
+
+  useEffect(() => {
+    if (open && bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages, open])
+
+  async function handleSend() {
+    const query = input.trim()
+    if (!query || loading) return
+    setInput('')
+    setMessages(prev => [...prev, { role: 'user', text: query }])
+    setLoading(true)
+    setMessages(prev => [...prev, { role: 'assistant', text: '…', analyzing: true }])
+    try {
+      const data = await apiFetch('/api/agent/support', {
+        method: 'POST',
+        body: JSON.stringify({ query, customer_id: customerId }),
+      }, token)
+      setMessages(prev => [
+        ...prev.slice(0, -1),
+        { role: 'assistant', text: data.response || 'No response received.' },
+      ])
+    } catch (e) {
+      setMessages(prev => [
+        ...prev.slice(0, -1),
+        { role: 'assistant', text: `Error: ${e.message}`, error: true },
+      ])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      {/* Chat Panel */}
+      {open && (
+        <div className="w-80 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+             style={{ height: '420px' }}>
+          {/* Header */}
+          <div className="bg-blue-700 px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-white font-semibold text-sm">Portfolio Assistant</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-blue-200 hover:text-white text-lg leading-none"
+            >
+              ×
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-950">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed ${
+                  msg.role === 'user'
+                    ? 'bg-blue-600 text-white'
+                    : msg.error
+                      ? 'bg-red-900/50 text-red-300'
+                      : 'bg-gray-800 text-gray-200'
+                }`}>
+                  {msg.analyzing ? (
+                    <span className="flex items-center gap-1.5 text-gray-400 italic">
+                      <span className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                      Analyzing…
+                    </span>
+                  ) : (
+                    msg.text
+                  )}
+                </div>
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* Input */}
+          <div className="p-3 border-t border-gray-800 bg-gray-900 flex gap-2">
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask about your portfolio…"
+              disabled={loading}
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
+            />
+            <button
+              onClick={handleSend}
+              disabled={loading || !input.trim()}
+              className="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-900 disabled:cursor-not-allowed text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Toggle Button */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-14 h-14 bg-blue-600 hover:bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition-colors"
+        title="Portfolio Assistant"
+      >
+        {open ? '×' : '💬'}
+      </button>
+    </div>
+  )
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
+
+export default function CustomerPortfolio() {
+  const { user, token, logout } = useAuth()
+  const navigate = useNavigate()
+  const { isConnected, refreshTick } = useLivePrices()
+
+  const [portfolio, setPortfolio] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [predictions, setPredictions] = useState(null)
+  const [predLoading, setPredLoading] = useState(false)
+  const [showTxn, setShowTxn] = useState(false)
+
+  const customerId = user?.user_id
+
+  useEffect(() => {
+    if (!customerId) return
+    apiFetch(`/api/portfolio/${customerId}`, {}, token)
+      .then(data => { setPortfolio(data); setLoading(false) })
+      .catch(e => { setError(e.message); setLoading(false) })
+  }, [customerId, token, refreshTick])
+
+  async function loadPredictions() {
+    setPredLoading(true)
+    try {
+      const data = await apiFetch(`/api/agent/market/${customerId}`, { method: 'POST' }, token)
+      setPredictions(data)
+    } catch (e) {
+      console.error('Predictions error:', e.message)
+    } finally {
+      setPredLoading(false)
+    }
+  }
+
+  async function handleLogout() {
+    try { await apiFetch('/api/auth/logout', { method: 'POST' }, token) } catch {}
+    logout()
+    navigate('/')
+  }
+
+  if (loading) return (
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <span className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  )
+  if (error) return (
+    <div className="min-h-screen bg-gray-950 flex items-center justify-center text-red-400 text-center p-8">
+      <div>
+        <p className="text-xl mb-2">Failed to load portfolio</p>
+        <p className="text-sm text-gray-500">{error}</p>
+      </div>
+    </div>
+  )
+  if (!portfolio) return null
+
+  const { summary, holdings, transactions, loans, alerts } = portfolio
+  const initials = `${summary.first_name?.[0] || ''}${summary.last_name?.[0] || ''}`
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-gray-100">
+      {/* Nav */}
+      <nav className="bg-gray-900 border-b border-gray-800 px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+            <span className="text-sm font-bold">F</span>
+          </div>
+          <span className="text-lg font-semibold">FinSight</span>
+          <span className="text-gray-500 text-sm ml-1">My Portfolio</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-400' : 'bg-red-400'}`} />
+            {isConnected ? 'Live' : 'Offline'}
+          </div>
+          <span className="text-sm text-gray-300">{user?.full_name}</span>
+          <button
+            onClick={handleLogout}
+            className="text-sm text-gray-400 hover:text-white transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+
+      <div className="px-6 py-6 max-w-7xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-blue-700 flex items-center justify-center text-xl font-bold">
+            {initials}
+          </div>
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold">{summary.first_name} {summary.last_name}</h1>
+            <div className="flex items-center gap-2 mt-1">
+              <RiskBadge profile={summary.risk_profile} />
+              <span className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded capitalize">
+                {summary.advisor_tier}
+              </span>
+              <span className="text-xs text-gray-500">{customerId}</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowTxn(true)}
+            className="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            + New Transaction
+          </button>
+        </div>
+
+        {/* 4 Metric Cards */}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {[
+            { label: 'Portfolio Value', value: fmtUSD(summary.portfolio_value), color: 'blue' },
+            { label: 'Net Worth',       value: fmtUSD(summary.net_worth),       color: 'emerald' },
+            { label: 'Net P&L',         value: fmtUSD(summary.net_pl),          color: (summary.net_pl || 0) >= 0 ? 'emerald' : 'red' },
+            { label: 'Cash Balance',    value: fmtUSD(summary.cash_balance),    color: 'gray' },
+          ].map(card => (
+            <div key={card.label} className="bg-gray-900 rounded-xl p-4 border border-gray-800">
+              <p className="text-xs text-gray-400 uppercase tracking-wide">{card.label}</p>
+              <p className={`text-2xl font-bold mt-1 text-${card.color}-400 font-mono`}>{card.value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* P&L Breakdown + Recent Alerts */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {/* P&L Breakdown */}
+          <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+            <h2 className="font-semibold mb-4 text-gray-200">P&L Breakdown</h2>
+            <div className="space-y-2 text-sm">
+              {[
+                {
+                  label: 'Gross investment gains',
+                  value: (summary.unrealized_pl || 0) + (summary.realized_pl || 0),
+                },
+                {
+                  label: 'Loan interest paid YTD',
+                  value: -(summary.interest_paid_ytd || 0),
+                },
+                {
+                  label: 'Net P&L',
+                  value: summary.net_pl || 0,
+                  bold: true,
+                },
+              ].map(row => (
+                <div
+                  key={row.label}
+                  className={`flex justify-between ${row.bold ? 'border-t border-gray-700 pt-2 font-semibold' : ''}`}
+                >
+                  <span className="text-gray-400">{row.label}</span>
+                  <span className={`font-mono ${row.value >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {row.value >= 0 ? '+' : ''}{fmtUSD(row.value)}
+                  </span>
+                </div>
+              ))}
+              <div className="flex justify-between border-t border-gray-700 pt-2 text-xs">
+                <span className="text-gray-400">vs S&P 500</span>
+                <span className={`font-mono ${(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {(summary.annualized_return_pct || 0).toFixed(1)}% vs {(summary.sp500_return_pct || 0).toFixed(1)}%
+                  {' '}{(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? '▲ Beating' : '▼ Lagging'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Alerts */}
+          <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+            <h2 className="font-semibold mb-4 text-gray-200">Recent Alerts</h2>
+            {(alerts || []).length === 0 ? (
+              <p className="text-gray-500 text-sm">No open alerts</p>
+            ) : (
+              <div className="space-y-2">
+                {alerts.slice(0, 5).map(a => (
+                  <div key={a.alert_id} className="flex items-start gap-2 text-sm">
+                    <SevBadge severity={a.severity} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-gray-300 text-xs line-clamp-2">{a.description}</p>
+                      <p className="text-gray-500 text-xs">{ago(a.detected_at)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Holdings Table */}
+        <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-800">
+            <h2 className="font-semibold text-gray-200">My Holdings</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-800 text-gray-400 text-xs uppercase">
+                <tr>
+                  {['Ticker', 'Type', 'Qty', 'Avg Buy', 'Current Price', 'Value', 'Unreal P&L%'].map(h => (
+                    <th key={h} className="px-4 py-2 text-left">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800">
+                {(holdings || []).filter(h => h.asset_type !== 'cash').map(h => (
+                  <tr key={h.ticker} className="hover:bg-gray-800/40">
+                    <td className="px-4 py-2 font-bold text-blue-400">{h.ticker}</td>
+                    <td className="px-4 py-2 text-gray-400 capitalize text-xs">{h.asset_type}</td>
+                    <td className="px-4 py-2 font-mono text-gray-300">{h.quantity}</td>
+                    <td className="px-4 py-2 font-mono text-gray-400">${fmt(h.avg_buy_price, 2)}</td>
+                    <td className="px-4 py-2">
+                      <LivePriceBadge price={h.current_price} change1d={h.change_1d_pct} />
+                    </td>
+                    <td className="px-4 py-2 font-mono text-white">${fmt(h.current_value)}</td>
+                    <td className={`px-4 py-2 font-mono ${(h.unrealized_pl_pct || 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {(h.unrealized_pl_pct || 0) >= 0 ? '+' : ''}{fmt(h.unrealized_pl_pct, 2)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* AI Market Predictions */}
+        <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+            <div>
+              <h2 className="font-semibold text-gray-200">AI Market Predictions</h2>
+              <p className="text-xs text-gray-500">Random Forest Model · 14 technical indicators</p>
+            </div>
+            {!predictions && (
+              <button
+                onClick={loadPredictions}
+                disabled={predLoading}
+                className="bg-blue-700 hover:bg-blue-600 disabled:bg-blue-900 text-white text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                {predLoading && (
+                  <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                )}
+                Load Predictions
+              </button>
+            )}
+            {predictions && (
+              <button
+                onClick={loadPredictions}
+                disabled={predLoading}
+                className="bg-gray-700 hover:bg-gray-600 disabled:opacity-50 text-white text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                {predLoading && (
+                  <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                )}
+                Refresh
+              </button>
+            )}
+          </div>
+          {predictions ? (
+            <div className="p-4 space-y-3">
+              {(predictions.portfolio_predictions || []).map(p => (
+                <div key={p.ticker} className="flex items-center gap-3">
+                  <span className="w-16 font-bold text-blue-400 text-sm">{p.ticker}</span>
+                  <div className="flex-1 bg-gray-800 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all"
+                      style={{ width: `${p.confidence}%` }}
+                    />
+                  </div>
+                  <span className="w-10 text-right text-xs text-gray-400 font-mono">{p.confidence}%</span>
+                  <SignalBadge signal={p.signal} />
+                  {p.flags_fired != null && (
+                    <span className="text-xs text-gray-500">{p.flags_fired} flags</span>
+                  )}
+                </div>
+              ))}
+              {predictions.narrative && (
+                <div className="mt-4 p-3 bg-gray-800 rounded-lg text-sm text-gray-300 leading-relaxed">
+                  {predictions.narrative}
+                </div>
+              )}
+              {predictions.universe_scanned > 0 && (
+                <p className="text-xs text-gray-500">Universe scanned: {predictions.universe_scanned} tickers</p>
+              )}
+            </div>
+          ) : (
+            <div className="p-6 text-center text-gray-500 text-sm">
+              {predLoading
+                ? 'Loading AI market analysis…'
+                : 'Click "Load Predictions" to view AI-powered market insights'}
+            </div>
+          )}
+        </div>
+
+        {/* Loans */}
+        {(loans || []).length > 0 && (
+          <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-800">
+              <h2 className="font-semibold text-gray-200">My Loans</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-800 text-gray-400 text-xs uppercase">
+                  <tr>
+                    {['Type', 'Outstanding', 'Rate%', 'EMI/mo', 'Next Due', 'Status'].map(h => (
+                      <th key={h} className="px-4 py-2 text-left">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800">
+                  {loans.map((l, i) => (
+                    <tr key={i} className={l.status === 'overdue' ? 'bg-red-900/20' : ''}>
+                      <td className="px-4 py-2 capitalize text-gray-300">{l.loan_type}</td>
+                      <td className="px-4 py-2 font-mono text-white">${fmt(l.outstanding_balance)}</td>
+                      <td className="px-4 py-2 font-mono text-amber-400">{l.interest_rate_pct}%</td>
+                      <td className="px-4 py-2 font-mono text-gray-300">${fmt(l.emi_monthly)}</td>
+                      <td className="px-4 py-2 text-gray-400 text-xs">
+                        {l.next_due_date?.split('T')[0] || '—'}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span className={`px-2 py-0.5 rounded text-xs ${
+                          l.status === 'overdue' ? 'bg-red-800 text-red-200' :
+                          l.status === 'active'  ? 'bg-green-900 text-green-300' :
+                                                   'bg-gray-700 text-gray-300'
+                        }`}>
+                          {l.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Recent Transactions */}
+        {(transactions || []).length > 0 && (
+          <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-800">
+              <h2 className="font-semibold text-gray-200">Recent Transactions</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-800 text-gray-400 text-xs uppercase">
+                  <tr>
+                    {['Ticker', 'Type', 'Qty', 'Price', 'Total', 'Date', 'Flag'].map(h => (
+                      <th key={h} className="px-4 py-2 text-left">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800">
+                  {transactions.slice(0, 10).map((t, i) => (
+                    <tr key={i} className={t.flagged ? 'bg-red-900/10' : ''}>
+                      <td className="px-4 py-2 font-bold text-blue-400">{t.ticker}</td>
+                      <td className={`px-4 py-2 font-medium ${t.txn_type === 'buy' ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {t.txn_type?.toUpperCase()}
+                      </td>
+                      <td className="px-4 py-2 font-mono text-gray-300">{t.quantity}</td>
+                      <td className="px-4 py-2 font-mono text-gray-400">${fmt(t.price_at_txn, 2)}</td>
+                      <td className="px-4 py-2 font-mono text-white">${fmt(t.total_value)}</td>
+                      <td className="px-4 py-2 text-gray-500 text-xs">
+                        {t.txn_timestamp ? new Date(t.txn_timestamp).toLocaleDateString() : '—'}
+                      </td>
+                      <td className="px-4 py-2">
+                        {t.flagged && (
+                          <span className="bg-red-800 text-red-200 text-xs px-1.5 py-0.5 rounded">⚑</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Bottom padding so chat button doesn't cover content */}
+        <div className="h-20" />
+      </div>
+
+      {/* Transaction Modal */}
+      {showTxn && (
+        <TransactionModal
+          customerId={customerId}
+          token={token}
+          onClose={() => setShowTxn(false)}
+          onSuccess={() => {
+            setShowTxn(false)
+            apiFetch(`/api/portfolio/${customerId}`, {}, token).then(setPortfolio).catch(() => {})
+          }}
+        />
+      )}
+
+      {/* Support Chat Widget */}
+      <SupportChat customerId={customerId} token={token} />
+    </div>
+  )
+}

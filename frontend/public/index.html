@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinSight — Wealth Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes flash-green { 0%,100%{background:transparent} 50%{background:#bbf7d0} }
+      @keyframes flash-red   { 0%,100%{background:transparent} 50%{background:#fecaca} }
+      .flash-green { animation: flash-green 0.6s ease; }
+      .flash-red   { animation: flash-red   0.6s ease; }
+      @keyframes slide-in { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
+      .slide-in { animation: slide-in 0.3s ease; }
+    </style>
+  </head>
+  <body class="bg-gray-950 text-gray-100">
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>

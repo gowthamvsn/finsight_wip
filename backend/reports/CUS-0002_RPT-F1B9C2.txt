@@ -1,0 +1,213 @@
+# FINSIGHT WEALTH MANAGEMENT
+## CLIENT ADVISORY REPORT
+
+---
+
+**Client:** Sofia Reyes | **Client ID:** CUS-0002
+**Report Date:** April 22, 2026
+**Advisor Tier:** Standard | **Risk Profile:** Aggressive
+**Report Classification:** Confidential — For Addressee Only
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Sofia Reyes holds a total portfolio valued at **$216,502.53**, supported by a net worth of **$195,302.53** after accounting for an outstanding loan balance of **$33,200.00**. The portfolio has generated a combined net profit-and-loss (P&L) of **$96,827.53**, comprised of **$95,477.53 in unrealized gains** and **$2,550.00 in realized gains** — a strong absolute performance driven primarily by long-term positions in Bitcoin (BTC) and technology equities.
+
+Cash reserves stand at **$12,000.00 (5.5% of portfolio)**, providing a modest liquidity buffer. Interest paid year-to-date totals **$1,200.00** against the outstanding personal loan.
+
+> ⚠️ **Immediate Attention Required:** The portfolio is in active risk breach, with cryptocurrency exposure at **55.00%** — exceeding the 50.00% ceiling permitted under the client's aggressive risk profile. Additionally, a high-value BTC transfer executed on April 21, 2026 has been flagged for review, and the personal loan is currently **overdue**. These matters are addressed in detail in Sections 3, 5, and 6 below.
+
+*Note: Annualized return and S&P 500 benchmark data were unavailable at the time of report generation and are therefore omitted from this report.*
+
+---
+
+## 2. PORTFOLIO PERFORMANCE BY ASSET CLASS
+
+### 2.1 Overall Allocation Snapshot
+
+| Asset Class | Allocation | Portfolio Value |
+|-------------|-----------|----------------|
+| Crypto | 55.00% | ~$119,153.33 |
+| Stocks | 45.00% | ~$97,349.20 |
+| ETFs | 0.00% | $0.00 |
+| Cash | 5.50% | $12,000.00 |
+
+*Note: Allocation percentages are reported as provided by the system. Cash is presented separately and may reflect partial overlap with total portfolio valuation.*
+
+---
+
+### 2.2 Individual Holdings Performance
+
+| Ticker | Class | Qty | Avg. Buy Price | Current Price | Market Value | Unrealized P&L | Return |
+|--------|-------|-----|---------------|--------------|-------------|----------------|--------|
+| BTC | Crypto | 1.50 | $38,200.00 | $77,969.72 | $116,954.58 | +$59,654.58 | +104.11% |
+| TSLA | Stock | 200 | $265.00 | $386.42 | $77,284.00 | +$24,284.00 | +45.82% |
+| META | Stock | 30 | $320.00 | $668.84 | $20,065.20 | +$10,465.20 | +109.01% |
+| SOL | Crypto | 25 | $45.00 | $87.95 | $2,198.75 | +$1,073.75 | +95.44% |
+
+---
+
+### 2.3 Asset Class Commentary
+
+**Cryptocurrency (55.00% | $119,153.33)**
+The crypto sleeve is the portfolio's largest and highest-performing asset class in absolute dollar terms. BTC alone has returned over **104%** since acquisition in January 2021, generating $59,654.58 in unrealized gains. SOL has also appreciated significantly (+95.44%), though its current market value ($2,198.75) represents a small fraction of total portfolio weight. Collectively, crypto holdings are the primary driver of the portfolio's total P&L, but also its most significant source of volatility risk.
+
+**Equities (45.00% | ~$97,349.20)**
+The equity sleeve is anchored by TSLA (200 shares) and META (30 shares), both of which show strong appreciation from their respective cost bases. META has returned **+109.01%** since the November 2022 purchase, while TSLA has returned **+45.82%** from the September 2021 entry. Note that a prior TSLA position of 30 shares was sold in February 2022 at $350.00, contributing to the $2,550.00 in realized gains. The planned NVDA purchase (25 shares at $480.00 in April 2023) does not appear in current holdings and may have been liquidated; the advisor should verify this position's status.
+
+**ETFs (0.00%)**
+No ETF exposure is currently held. This represents a potential diversification gap, particularly given the concentration in individual names and high-volatility assets.
+
+**Cash (5.50% | $12,000.00)**
+Cash reserves are adequate for near-term operational needs but should be evaluated in light of the overdue loan obligation. The $12,000.00 cash position exceeds the monthly EMI of $684.81 many times over; immediate loan regularization is feasible and recommended.
+
+---
+
+## 3. RISK ASSESSMENT
+
+### 3.1 Risk Profile Limits — Crypto Allocation Thresholds
+
+| Risk Profile | Max. Crypto Allocation | Client's Current Exposure | Status |
+|-------------|----------------------|--------------------------|--------|
+| Conservative | 10.00% | 55.00% | — |
+| Moderate | 25.00% | 55.00% | — |
+| **Aggressive** | **50.00%** | **55.00%** | **⚠️ IN BREACH** |
+
+### 3.2 Breach Analysis
+
+Sofia's aggressive risk profile permits a maximum cryptocurrency allocation of **50.00%**. The current allocation of **55.00%** exceeds this ceiling by **5 percentage points**, representing a **$10,000–$11,000 estimated overweight** relative to the permitted threshold (based on total portfolio value).
+
+The system has logged **10 consecutive open alerts** for this breach, indicating the condition has persisted without remediation over multiple observation periods. This is a material compliance concern that warrants prompt corrective action.
+
+### 3.3 Concentration Risk
+
+- **Single-asset concentration:** BTC alone represents approximately **54%** of total portfolio value, creating extreme sensitivity to Bitcoin price movements.
+- **Sector concentration:** Both equity holdings (TSLA, META) are in the high-growth technology/consumer discretionary space. There is no exposure to defensive sectors, fixed income, or real assets.
+- **No ETF diversification:** The absence of ETF holdings means the portfolio lacks broad-market diversification instruments that could otherwise moderate volatility.
+
+### 3.4 Liquidity Risk
+
+The flagged BTC transfer of 1.40 BTC on April 21, 2026 — valued at approximately **$105,758.75** — is a significant event. If this transfer represents an outflow of assets from the custodied portfolio, current BTC holdings should be reconciled. The remaining 1.50 BTC on record suggests either the transfer relates to a prior or separate lot, or the account data should be reviewed for accuracy. This warrants immediate advisor verification.
+
+---
+
+## 4. MARKET INSIGHTS — ML MODEL PREDICTIONS (5-Day Horizon)
+
+*The following short-term directional signals are produced by FinSight's proprietary machine learning models. They are indicative only and do not constitute guaranteed forecasts. Please refer to the Risk Disclaimer in Section 8.*
+
+| Ticker | Asset Class | 5-Day Predicted Move | Signal |
+|--------|-------------|---------------------|--------|
+| BTC | Crypto | **+0.07%** | Neutral / Marginally Positive |
+| TSLA | Stock | **+1.12%** | Mildly Positive |
+| META | Stock | **-1.17%** | Mildly Negative |
+| SOL | Crypto | **-4.32%** | Negative |
+
+### 4.1 Key Observations
+
+- **BTC:** The model signals near-flat movement (+0.07%) over the next 5 trading days. Given BTC's historical volatility, this should be interpreted as a neutral signal rather than a directional conviction.
+- **TSLA:** A mild positive signal (+1.12%) suggests modest near-term momentum. This is the most constructive short-term outlook among current holdings.
+- **META:** A slight negative signal (-1.17%) warrants monitoring, particularly given the position's strong unrealized gains. Near-term softness does not necessarily alter the longer-term thesis, but risk management should be considered.
+- **SOL:** The most concerning short-term signal at **-4.32%**. While SOL's total portfolio weight is small (~$2,199), the magnitude of the predicted decline is notable. Given the position's high percentage return, the client may wish to evaluate whether to protect gains.
+
+> **Important Caveat:** 5-day ML predictions carry inherent uncertainty and should be used as one input among many — not as the sole basis for trading decisions. All signals are point estimates and do not convey confidence intervals or tail risk scenarios.
+
+---
+
+## 5. LOAN & DEBT SUMMARY
+
+| Loan Type | Outstanding Balance | Interest Rate | Monthly EMI | Status |
+|-----------|-------------------|--------------|-------------|--------|
+| Personal Loan | **$33,200.00** | 6.50% p.a. | $684.81 | **⚠️ OVERDUE** |
+
+### 5.1 Analysis
+
+- The personal loan at **6.50% annual interest** is currently **overdue**, meaning late fees, credit score impacts, and potential acceleration clauses may apply depending on the lending agreement terms.
+- **Interest paid YTD** stands at $1,200.00, representing approximately 1.75 months of interest — suggesting the loan has been serviced partially but not consistently in 2026.
+- At an outstanding balance of $33,200.00 and a monthly EMI of $684.81, the estimated remaining loan term is approximately **4–5 years** under standard amortization, though this depends on the original loan terms.
+- The client's **cash balance of $12,000.00** is more than sufficient to cover several months of EMI payments and immediately resolve the overdue status. Prompt payment is strongly advisable to avoid further penalties.
+- The loan-to-portfolio ratio stands at approximately **15.3%** ($33,200 / $216,502.53), which is elevated but manageable given the portfolio's current unrealized gain position.
+
+---
+
+## 6. ALERTS & ACTIONS REQUIRED
+
+### 6.1 Active Alerts Summary
+
+| Priority | Alert Type | Description | Status |
+|----------|-----------|-------------|--------|
+| 🔴 High | Flagged Transaction | BTC transfer of 1.40 BTC (~$105,758.75) on April 21, 2026 | Requires Immediate Review |
+| 🟡 Medium | Risk Breach (×10) | Crypto allocation 55.00% exceeds aggressive profile limit of 50.00% | Open — Unresolved |
+| 🟡 Medium | Loan Overdue | Personal loan EMI payment(s) missed | Immediate Remediation Required |
+
+### 6.2 Required Actions
+
+**Action 1 — Flagged Transaction Investigation (URGENT)**
+The transfer of 1.40 BTC valued at approximately $105,758.75 on April 21, 2026 has been flagged by the system. The advisor must:
+- Confirm whether this transfer was client-initiated and authorized.
+- Verify the destination of the transferred assets (internal reallocation vs. external withdrawal).
+- Reconcile the flagged transaction against current BTC holdings on record.
+- Escalate to the compliance team if the transaction cannot be verified within 24–48 hours.
+
+**Action 2 — Crypto Allocation Rebalancing**
+Ten consecutive unresolved risk breach alerts indicate the portfolio has been non-compliant with the aggressive risk profile limit for an extended period. The client and advisor must formulate a plan to reduce crypto exposure from 55.00% to at or below 50.00%. Options include partial BTC/SOL liquidation or increasing non-crypto holdings proportionally.
+
+**Action 3 — Loan Regularization**
+The overdue personal loan must be addressed immediately. Available cash ($12,000.00) provides more than sufficient liquidity to bring the loan current. Continued non-payment risks credit implications and potential loan default provisions.
+
+---
+
+## 7. RECOMMENDATIONS
+
+The following recommendations are based strictly on data available at the time of this report. They are advisory in nature and require client confirmation before any action is taken.
+
+---
+
+**Recommendation 1: Immediately Regularize the Overdue Personal Loan**
+> *Priority: Urgent*
+
+The client's cash balance of $12,000.00 is readily available and well in excess of the overdue EMI amount. We recommend settling all outstanding EMI arrears immediately to stop any accruing penalties and protect the client's credit standing. Going forward, consider setting up an automatic payment instruction to ensure the $684.81 monthly EMI is honored consistently.
+
+---
+
+**Recommendation 2: Reduce Cryptocurrency Allocation to Achieve Profile Compliance**
+> *Priority: High*
+
+The portfolio's crypto weighting of 55.00% has persistently exceeded the 50.00% limit applicable to aggressive profiles. To remediate the breach, consider a **partial reduction of the BTC position** — the portfolio's largest and most appreciated single holding. Selling a modest portion of BTC (e.g., sufficient to bring crypto below 50% of total portfolio value) would simultaneously resolve the compliance breach and lock in a portion of the position's 104%+ unrealized gain. The client should be advised of potential tax implications on any realized gain. The flagged BTC transfer must first be clarified before any further BTC transactions are initiated.
+
+---
+
+**Recommendation 3: Monitor SOL Given Negative Short-Term Signal and Consider Protective Action**
+> *Priority: Medium*
+
+The 5-day ML model flags SOL with a **-4.32% predicted decline** — the most negative near-term signal among current holdings. While the SOL position is small in absolute dollar terms ($2,198.75), the client may wish to evaluate whether the current unrealized gain (+95.44%) warrants protective action (e.g., setting a trailing stop-loss). The advisor should review this signal alongside broader SOL market conditions before making a specific recommendation.
+
+---
+
+**Recommendation 4: Introduce Diversification via ETFs**
+> *Priority: Medium*
+
+The portfolio currently holds **zero ETF exposure**. Given the high concentration in three individual securities (BTC, TSLA, META) and a paired crypto asset (SOL), the client's returns are highly sensitive to idiosyncratic risks. Introducing one or more broad-market or sector ETFs — for example, a broad equity index ETF — would improve diversification without necessarily reducing the portfolio's growth orientation. The advisor should propose specific ETF candidates aligned with the aggressive risk profile at the next client review.
+
+---
+
+**Recommendation 5: Clarify and Reconcile the NVDA Position**
+> *Priority: Medium*
+
+Transaction records show a purchase of **25 shares of NVDA at $480.00 in April 2023** (total cost $12,000.00), but NVDA does not appear in current holdings. The advisor should clarify with the client whether this position was liquidated, transferred, or if a data discrepancy exists. If NVDA was sold, the realized gain or loss should be captured in the P&L record. If it was transferred out, this should be documented. Accurate position records are essential for reliable performance reporting.
+
+---
+
+## 8. RISK DISCLAIMER
+
+**This report is produced by FinSight Wealth Management and is intended solely for the use of the named client, Sofia Reyes (CUS-0002). It is confidential and may not be reproduced or distributed without prior written consent.**
+
+**No Guarantee of Returns:** Past performance of any security, asset class, or portfolio is not indicative of future results. The unrealized and realized gains reflected in this report are based on current market prices as of the report date and are subject to change. Investments may lose value.
+
+**ML Predictions:** The 5-day price predictions referenced in Section 4 are generated by proprietary machine learning models and are provided for informational purposes only. They are not guaranteed forecasts and should not be construed as investment advice or trading signals. Model outputs carry inherent uncertainty and may be materially incorrect.
+
+**Market Risk:** All portfolio holdings — including equities, cryptocurrencies, and any cash equivalents — are subject to market risk, liquidity risk, and macroeconomic risk. Cryptocurrency assets in particular are subject to extreme price volatility, regulatory uncertainty, and technological risk, which may result in rapid and substantial losses.
+
+**Crypto-Specific Risk:** Digital assets such as Bitcoin (BTC) and Solana (SOL) are not insured by any government deposit protection scheme. Their legal and regulatory status varies by jurisdiction and is subject to change. The client is advised to understand these risks fully before maintaining or increasing cryptocurrency exposure.
+
+**Loan & Leverage Risk:** The use of borrowed capital (personal loan outstanding: $33,200.00) magnifies both potential gains and losses. Failure to service loan obligations

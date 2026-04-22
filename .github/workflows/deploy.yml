@@ -1,0 +1,82 @@
+name: Deploy FinSight to Azure
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build and push backend image to ACR
+      run: |
+        az acr build \
+          --registry ${{ secrets.AZURE_REGISTRY_NAME }} \
+          --image finsight-backend:${{ github.sha }} \
+          --image finsight-backend:latest \
+          ./backend
+
+    - name: Build and push frontend image to ACR
+      run: |
+        az acr build \
+          --registry ${{ secrets.AZURE_REGISTRY_NAME }} \
+          --image finsight-frontend:${{ github.sha }} \
+          --image finsight-frontend:latest \
+          ./frontend
+
+    - name: Get AKS credentials
+      run: |
+        az aks get-credentials \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --name ${{ secrets.AZURE_AKS_CLUSTER }} \
+          --overwrite-existing
+
+    - name: Apply k8s manifests
+      run: |
+        kubectl apply -f k8s/namespace.yaml
+        kubectl apply -f k8s/backend-service.yaml
+        kubectl apply -f k8s/frontend-service.yaml
+        kubectl apply -f k8s/backend-deployment.yaml
+        kubectl apply -f k8s/frontend-deployment.yaml
+
+    - name: Update deployment images
+      run: |
+        kubectl set image deployment/backend \
+          backend=${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/finsight-backend:${{ github.sha }} \
+          -n finsight
+
+        kubectl set image deployment/frontend \
+          frontend=${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/finsight-frontend:${{ github.sha }} \
+          -n finsight
+
+    - name: Wait for rollout
+      run: |
+        kubectl rollout status deployment/backend \
+          -n finsight --timeout=300s
+        kubectl rollout status deployment/frontend \
+          -n finsight --timeout=300s
+
+    - name: Get public IP
+      run: |
+        echo "Waiting for external IP..."
+        for i in {1..20}; do
+          IP=$(kubectl get service frontend-service \
+            -n finsight \
+            -o jsonpath='{.status.loadBalancer.ingress[0].ip}' \
+            2>/dev/null)
+          if [ -n "$IP" ]; then
+            echo "✅ Live URL: http://$IP"
+            break
+          fi
+          echo "Attempt $i/20 — waiting 15s..."
+          sleep 15
+        done

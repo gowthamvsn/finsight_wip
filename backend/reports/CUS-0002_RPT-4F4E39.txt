@@ -1,0 +1,240 @@
+# FINSIGHT WEALTH MANAGEMENT
+## CLIENT ADVISORY REPORT
+
+---
+
+**Client:** Sofia Reyes | **Client ID:** CUS-0002
+**Report Date:** April 22, 2026
+**Advisor Tier:** Standard | **Risk Profile:** Aggressive
+**Report Currency:** USD
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Sofia Reyes holds a diversified portfolio with a **current market value of $216,586.08**, supported by a net worth of **$195,386.08** after accounting for $33,200.00 in outstanding loan obligations. The portfolio has generated substantial cumulative gains, with **unrealized P&L of $95,561.08** and realized P&L of $2,550.00, bringing total net P&L to **$96,911.08** — a strong absolute return relative to the portfolio's cost basis.
+
+Cash reserves stand at **$12,000.00 (5.50% of portfolio value)**, which provides moderate near-term liquidity. However, several items require immediate attention:
+
+- A **personal loan is currently overdue**, carrying a 6.50% annual interest rate with monthly EMI of $684.81.
+- **Crypto allocation at 55.10% exceeds the 50% ceiling** permitted under the aggressive risk profile, triggering repeated compliance alerts.
+- A **large BTC transfer transaction dated April 21, 2026 has been flagged** and requires review.
+- **Annualized return and S&P 500 benchmark data were unavailable** at the time of report generation; performance comparisons against market indices are therefore omitted from this report.
+
+---
+
+## 2. PORTFOLIO PERFORMANCE
+
+### 2.1 Overall Portfolio Snapshot
+
+| Metric | Value |
+|---|---|
+| Total Portfolio Value | $216,586.08 |
+| Net Worth (after liabilities) | $195,386.08 |
+| Cash Balance | $12,000.00 |
+| Unrealized P&L | $95,561.08 |
+| Realized P&L | $2,550.00 |
+| **Total Net P&L** | **$96,911.08** |
+| Interest Paid YTD | $1,200.00 |
+| Annualized Return | *Data unavailable* |
+| S&P 500 Benchmark | *Data unavailable* |
+
+*Note: Annualized return and benchmark figures were not available at report generation. Relative performance versus the S&P 500 cannot be assessed at this time.*
+
+---
+
+### 2.2 Asset Class Allocation
+
+| Asset Class | Allocation | Portfolio Value |
+|---|---|---|
+| Cryptocurrency | 55.10% | ~$119,236.88 |
+| Equities (Stocks) | 44.90% | ~$97,349.20 |
+| ETFs | 0.00% | $0.00 |
+| Cash | 5.50% | $12,000.00 |
+
+*Note: Cash percentage is calculated relative to portfolio value; allocations for stocks and crypto are as reported by the platform.*
+
+---
+
+### 2.3 Individual Holdings Performance
+
+| Ticker | Class | Qty | Avg. Buy Price | Current Price | Market Value | Unrealized P&L | Return |
+|---|---|---|---|---|---|---|---|
+| BTC | Crypto | 1.50 | $38,200.00 | $78,024.25 | $117,036.38 | $59,736.38 | +104.25% |
+| TSLA | Stock | 200 | $265.00 | $386.42 | $77,284.00 | $24,284.00 | +45.82% |
+| META | Stock | 30 | $320.00 | $668.84 | $20,065.20 | $10,465.20 | +109.01% |
+| SOL | Crypto | 25 | $45.00 | $88.02 | $2,200.50 | $1,075.50 | +95.60% |
+
+**Key Observations:**
+
+- **Bitcoin (BTC)** is the single largest holding, representing approximately **54.0% of total portfolio value**. It has delivered a return exceeding 104% from the average cost basis, making it the primary driver of overall portfolio gains.
+- **Tesla (TSLA)** is the second-largest position at $77,284.00, with a solid 45.82% unrealized gain since the September 2021 purchase.
+- **Meta Platforms (META)** has been the strongest equity performer on a percentage basis, up 109.01% since the November 2022 purchase at $320.00 per share.
+- **Solana (SOL)** is a relatively small position ($2,200.50) but has appreciated 95.60% from its entry price.
+- **NVDA:** Per transaction history, 25 shares of NVDA were purchased in April 2023 at $480.00/share ($12,000.00 total). This position does **not appear in current holdings**, suggesting it may have been sold or transferred. This warrants clarification.
+
+---
+
+## 3. RISK ASSESSMENT
+
+### 3.1 Risk Profile Limits
+
+| Risk Profile | Maximum Crypto Allocation Permitted |
+|---|---|
+| Conservative | 10% |
+| Moderate | 25% |
+| **Aggressive (Sofia's Profile)** | **50%** |
+
+### 3.2 Current Breach Status
+
+| Risk Metric | Limit | Current | Status |
+|---|---|---|---|
+| Crypto Allocation | ≤ 50.00% | **55.10%** | ⚠️ **BREACH** |
+| ETF Allocation | No limit defined | 0.00% | — |
+| Cash Adequacy | Advisory minimum | 5.50% | Adequate |
+
+### 3.3 Risk Commentary
+
+Sofia's crypto allocation **exceeds her aggressive profile ceiling by 5.10 percentage points**. While her profile permits a high tolerance for risk, internal compliance limits exist to protect against catastrophic single-asset-class drawdowns. Ten consecutive alerts of this breach have been generated and remain open, indicating the issue has persisted without corrective action.
+
+The concentration risk in BTC alone — approximately 54% of total portfolio value — is particularly noteworthy. Cryptocurrency markets are subject to high volatility, and a significant adverse price movement in BTC would have an outsized negative impact on Sofia's net worth.
+
+Additionally, carrying a **$33,200.00 overdue loan** alongside concentrated volatile holdings creates a compounding liability risk: a market downturn could simultaneously erode asset values while loan obligations remain fixed.
+
+---
+
+## 4. MARKET INSIGHTS
+
+*The following 5-day price predictions are generated by the platform's internal ML model. These are statistical estimates, not guarantees of future performance. See Risk Disclaimer (Section 8).*
+
+| Asset | 5-Day Predicted Move | Direction | Commentary |
+|---|---|---|---|
+| BTC | +0.07% | ➡️ Neutral | Essentially flat near-term prediction; no significant directional signal. |
+| TSLA | +1.12% | 🟢 Mildly Positive | Modest upward movement suggested over 5 days. |
+| META | -1.17% | 🔴 Mildly Negative | Slight downward pressure predicted; within normal volatility range. |
+| SOL | -4.32% | 🔴 Negative | Most significant predicted short-term decline among holdings. |
+
+**Key Takeaways:**
+
+- **SOL** shows the most notable near-term weakness per the model (-4.32%). Given that SOL is already a small position, the absolute dollar impact is limited (~$95 at current value), but the signal warrants monitoring.
+- **META's** mild predicted decline (-1.17%) does not, on its own, suggest a structural concern, but combined with its already elevated price level ($668.84 vs. $320.00 cost basis), clients with profit-taking objectives may wish to note the signal.
+- **BTC's** near-flat prediction (+0.07%) following its strong run to ~$78,024 suggests a period of consolidation may be occurring.
+- **TSLA's** +1.12% prediction is the most positive signal in the near term.
+
+*These ML signals should be considered as one data point among many and are not the basis for trading decisions in isolation.*
+
+---
+
+## 5. LOAN & DEBT SUMMARY
+
+| Loan Type | Outstanding Balance | Interest Rate | Monthly EMI | Status |
+|---|---|---|---|---|
+| Personal Loan | $33,200.00 | 6.50% p.a. | $684.81 | ⚠️ **OVERDUE** |
+
+### 5.1 Debt Analysis
+
+- The outstanding loan of $33,200.00 represents **15.34% of total portfolio value** and **17.00% of net worth**.
+- At 6.50% annually, the **estimated annual interest cost is approximately $2,158.00**, or ~$179.83/month.
+- **$1,200.00 in interest has already been paid YTD** in 2026.
+- The **overdue status** of this loan is a critical concern. Continued non-payment may result in penalty interest charges, negative credit reporting, or legal action by the lender.
+- With **$12,000.00 in cash**, Sofia has sufficient liquidity to bring the loan current and cover several months of future EMIs without liquidating any investment positions.
+
+### 5.2 Debt Serviceability
+
+| Metric | Value |
+|---|---|
+| Cash Available | $12,000.00 |
+| Months of EMI Coverage (cash only) | ~17.5 months |
+| Loan-to-Portfolio Ratio | 15.34% |
+| Loan-to-Net Worth Ratio | 17.00% |
+
+The loan is serviceable given current cash balances. Immediate remediation is strongly advisable.
+
+---
+
+## 6. ALERTS & ACTIONS REQUIRED
+
+### 6.1 Open Alerts Summary
+
+| Priority | Alert Type | Detail | Status |
+|---|---|---|---|
+| 🚨 High | Flagged Transaction | BTC transfer of 1.4 BTC (~$105,758.75) on April 21, 2026 | Requires Immediate Review |
+| ⚠️ Medium | Risk Breach (×10) | Crypto allocation 55.10% exceeds 50% aggressive limit | Open — Unresolved |
+| ⚠️ Medium | Loan Overdue | Personal loan EMI overdue — $684.81 minimum past due | Immediate Action Required |
+
+### 6.2 Flagged Transaction — April 21, 2026
+
+A transfer of **1.4 BTC valued at approximately $105,758.75** was recorded on April 21, 2026, and has been flagged by the platform. This is a significant transaction representing approximately **48.8% of total portfolio value**.
+
+**Action Required:** Sofia must confirm with her advisor the nature, destination, and purpose of this transfer. If this transfer represents a completed outbound movement of BTC from the portfolio, the current BTC holding balance of 1.5 BTC in the system may need to be reconciled. The advisor should verify:
+- Whether this was an authorized transfer by the account holder.
+- Whether the destination wallet/account is known and verified.
+- Whether AML/KYC obligations have been satisfied per platform policy.
+
+This alert should not be closed without documented resolution.
+
+---
+
+## 7. RECOMMENDATIONS
+
+The following recommendations are based solely on the data provided in this report. They do not constitute a guarantee of outcomes. Sofia should discuss all actions with her assigned advisor before implementation.
+
+---
+
+**Recommendation 1: Resolve the Overdue Loan Immediately**
+
+The personal loan is overdue and accruing at 6.50% p.a. With $12,000.00 in cash on hand — approximately 17.5 months of EMI coverage — Sofia has the liquidity to bring the account current without liquidating any investment positions. **Immediate payment of all overdue EMIs is strongly advised** to avoid penalty charges, credit score damage, and potential legal consequences. Going forward, setting up an auto-debit for the $684.81 monthly EMI from the cash balance would prevent recurrence.
+
+---
+
+**Recommendation 2: Reduce Crypto Allocation to Below 50% to Resolve Compliance Breach**
+
+Crypto currently sits at 55.10% of the portfolio, exceeding the 50% aggressive-profile limit by 5.10 percentage points. The breach has generated **10 unresolved alerts**. To bring crypto below 50%, Sofia should consider **partial profit-taking in BTC or SOL**. Given BTC's 104.25% gain, even a modest partial sale would reduce concentration risk, crystalize gains, and bring the allocation back within bounds. The SOL ML model is also predicting a -4.32% 5-day decline, which may make it a candidate for trim or review. Any sale should be evaluated in the context of tax implications.
+
+---
+
+**Recommendation 3: Clarify and Resolve the Flagged BTC Transfer**
+
+The April 21, 2026 transfer of 1.4 BTC ($105,758.75) has been flagged and remains unresolved. **Sofia must provide documentation and confirmation** of the purpose and recipient of this transfer to her advisor as a matter of urgency. Until this is resolved, it represents an unquantified risk to the account and a potential compliance issue. The advisor should escalate this to the platform's compliance team if documentation is not provided promptly.
+
+---
+
+**Recommendation 4: Investigate the Missing NVDA Position**
+
+Transaction history records a purchase of **25 shares of NVDA at $480.00** (total $12,000.00) on April 15, 2023. This position does not appear in the current holdings. Sofia should verify with her advisor whether this position was sold (and if so, confirm the realized P&L is accurately captured), transferred, or if there is a data discrepancy in the platform that needs correction.
+
+---
+
+**Recommendation 5: Establish ETF Exposure for Diversification**
+
+Sofia currently holds **0% in ETFs**, with her equity exposure concentrated in just two stocks (TSLA and META) and crypto in two assets (BTC and SOL). For an aggressive investor, **adding broad-market or sector ETFs** (e.g., growth, technology, or international ETFs) could provide better diversification without necessarily reducing risk appetite. This would reduce single-stock concentration risk while maintaining an aggressive overall posture. This recommendation should be discussed with the advisor to identify specific instruments appropriate for Sofia's goals and tax situation.
+
+---
+
+## 8. RISK DISCLAIMER
+
+**IMPORTANT — PLEASE READ CAREFULLY**
+
+This report has been prepared by FinSight Wealth Management for informational and advisory purposes only. It is based exclusively on data available within the FinSight platform as of the report date (April 22, 2026) and does not constitute a solicitation, offer, or recommendation to buy or sell any security, cryptocurrency, or financial instrument.
+
+**Past Performance:** All performance figures, including unrealized and realized P&L, represent historical results based on cost-basis data held within the platform. Past performance is not indicative of, and does not guarantee, future results.
+
+**ML Predictions:** The 5-day price predictions included in Section 4 are generated by a statistical machine learning model. These predictions carry inherent uncertainty and may be materially incorrect. They are provided for informational context only and should not be relied upon as the sole or primary basis for any investment decision.
+
+**Market Risk:** All investments involve risk, including the potential loss of principal. Cryptocurrency assets are particularly volatile and may experience rapid and significant price declines. Equity markets are also subject to systemic and company-specific risks that can materially impact portfolio values.
+
+**No Benchmark Comparison:** Annualized return and S&P 500 benchmark data were unavailable at the time of report generation. No relative performance claims are made in this report.
+
+**Data Accuracy:** This report relies on data provided by the FinSight platform, including live prices sourced from third-party data providers. FinSight does not warrant the accuracy or completeness of third-party data.
+
+**Regulatory & Tax:** This report does not constitute legal, tax, or regulatory advice. Clients should consult qualified tax and legal professionals before making investment decisions, particularly with respect to cryptocurrency transactions, which may have significant tax implications.
+
+**Flagged Transactions:** The flagged transaction noted in this report is subject to review in accordance with FinSight's compliance and AML policies. FinSight reserves the right to restrict account activity pending resolution of flagged items.
+
+**Loan Obligations:** Loan terms, interest rates, and overdue status are based on data within the FinSight platform. Clients are responsible for verifying loan details directly with their lender.
+
+*FinSight Wealth Management | Standard Advisory Services | Report generated April 22, 2026*
+*For questions regarding this report, please contact your assigned advisor.*
+
+---
+*© 2026 FinSight Wealth Management. All rights reserved. This document is confidential and intended solely for the named client.*

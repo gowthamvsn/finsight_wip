@@ -1,0 +1,30 @@
+INSERT INTO reports
+    (report_id, customer_id, report_type, generated_by_agent, llm_used,
+     blob_url, pages, tokens_used, cost_usd, email_sent, generated_at, sent_at, created_at)
+VALUES
+('RPT-0001','CUS-0001','portfolio_summary','agent-1','gpt-4','https://blob.example.com/rpt-0001.pdf',12,8500,2.50,TRUE,'2024-04-20 14:00:00+00','2024-04-21 08:00:00+00','2024-04-20 14:05:00+00'),
+('RPT-0002','CUS-0003','risk_analysis','agent-1','gpt-4','https://blob.example.com/rpt-0002.pdf',15,12000,3.25,FALSE,'2024-04-19 10:30:00+00',NULL,'2024-04-19 10:35:00+00'),
+('RPT-0003','CUS-0005','tax_summary','agent-2','claude-3','https://blob.example.com/rpt-0003.pdf',18,9800,2.85,TRUE,'2024-04-18 15:45:00+00','2024-04-18 16:30:00+00','2024-04-18 15:50:00+00'),
+('RPT-0004','CUS-0007','performance_review','agent-1','gpt-4','https://blob.example.com/rpt-0004.pdf',14,11200,3.10,FALSE,'2024-04-17 09:20:00+00',NULL,'2024-04-17 09:25:00+00'),
+('RPT-0005','CUS-0009','portfolio_summary','agent-3','claude-3','https://blob.example.com/rpt-0005.pdf',16,13500,3.75,TRUE,'2024-04-16 11:00:00+00','2024-04-16 11:45:00+00','2024-04-16 11:05:00+00'),
+('RPT-0006','CUS-0011','risk_analysis','agent-2','gpt-4','https://blob.example.com/rpt-0006.pdf',13,7900,2.20,TRUE,'2024-04-15 13:30:00+00','2024-04-15 14:15:00+00','2024-04-15 13:35:00+00'),
+('RPT-0007','CUS-0013','tax_summary','agent-1','claude-3','https://blob.example.com/rpt-0007.pdf',20,10500,3.00,FALSE,'2024-04-14 16:15:00+00',NULL,'2024-04-14 16:20:00+00'),
+('RPT-0008','CUS-0015','portfolio_summary','agent-3','gpt-4','https://blob.example.com/rpt-0008.pdf',17,14200,3.95,TRUE,'2024-04-13 10:45:00+00','2024-04-13 11:30:00+00','2024-04-13 10:50:00+00'),
+('RPT-0009','CUS-0017','performance_review','agent-2','claude-3','https://blob.example.com/rpt-0009.pdf',15,11800,3.35,TRUE,'2024-04-12 14:20:00+00','2024-04-12 15:00:00+00','2024-04-12 14:25:00+00'),
+('RPT-0010','CUS-0019','risk_analysis','agent-1','gpt-4','https://blob.example.com/rpt-0010.pdf',14,9200,2.55,FALSE,'2024-04-11 12:00:00+00',NULL,'2024-04-11 12:05:00+00'),
+('RPT-0011','CUS-0021','portfolio_summary','agent-3','claude-3','https://blob.example.com/rpt-0011.pdf',19,13800,3.85,TRUE,'2024-04-10 09:30:00+00','2024-04-10 10:15:00+00','2024-04-10 09:35:00+00'),
+('RPT-0012','CUS-0023','tax_summary','agent-2','gpt-4','https://blob.example.com/rpt-0012.pdf',16,10200,2.90,TRUE,'2024-04-09 15:45:00+00','2024-04-09 16:30:00+00','2024-04-09 15:50:00+00'),
+('RPT-0013','CUS-0025','performance_review','agent-1','claude-3','https://blob.example.com/rpt-0013.pdf',18,12500,3.50,FALSE,'2024-04-08 11:20:00+00',NULL,'2024-04-08 11:25:00+00'),
+('RPT-0014','CUS-0027','risk_analysis','agent-3','gpt-4','https://blob.example.com/rpt-0014.pdf',15,11500,3.20,TRUE,'2024-04-07 13:00:00+00','2024-04-07 13:45:00+00','2024-04-07 13:05:00+00'),
+('RPT-0015','CUS-0029','portfolio_summary','agent-2','claude-3','https://blob.example.com/rpt-0015.pdf',17,12800,3.65,TRUE,'2024-04-06 10:30:00+00','2024-04-06 11:15:00+00','2024-04-06 10:35:00+00'),
+('RPT-0016','CUS-0031','tax_summary','agent-1','gpt-4','https://blob.example.com/rpt-0016.pdf',14,9500,2.70,FALSE,'2024-04-05 14:15:00+00',NULL,'2024-04-05 14:20:00+00'),
+('RPT-0017','CUS-0033','risk_analysis','agent-3','claude-3','https://blob.example.com/rpt-0017.pdf',19,14500,4.05,TRUE,'2024-04-04 09:45:00+00','2024-04-04 10:30:00+00','2024-04-04 09:50:00+00'),
+('RPT-0018','CUS-0035','performance_review','agent-2','gpt-4','https://blob.example.com/rpt-0018.pdf',16,11200,3.10,TRUE,'2024-04-03 12:30:00+00','2024-04-03 13:15:00+00','2024-04-03 12:35:00+00'),
+('RPT-0019','CUS-0037','portfolio_summary','agent-1','claude-3','https://blob.example.com/rpt-0019.pdf',18,13200,3.70,FALSE,'2024-04-02 15:00:00+00',NULL,'2024-04-02 15:05:00+00'),
+('RPT-0020','CUS-0039','tax_summary','agent-3','gpt-4','https://blob.example.com/rpt-0020.pdf',17,12100,3.40,TRUE,'2024-04-01 11:15:00+00','2024-04-01 12:00:00+00','2024-04-01 11:20:00+00'),
+('RPT-0021','CUS-0041','risk_analysis','agent-2','claude-3','https://blob.example.com/rpt-0021.pdf',15,10800,3.05,TRUE,'2024-03-31 13:45:00+00','2024-03-31 14:30:00+00','2024-03-31 13:50:00+00'),
+('RPT-0022','CUS-0043','performance_review','agent-1','gpt-4','https://blob.example.com/rpt-0022.pdf',14,11500,3.25,FALSE,'2024-03-30 10:20:00+00',NULL,'2024-03-30 10:25:00+00'),
+('RPT-0023','CUS-0045','portfolio_summary','agent-3','claude-3','https://blob.example.com/rpt-0023.pdf',20,14800,4.15,TRUE,'2024-03-29 14:30:00+00','2024-03-29 15:15:00+00','2024-03-29 14:35:00+00'),
+('RPT-0024','CUS-0047','tax_summary','agent-2','gpt-4','https://blob.example.com/rpt-0024.pdf',16,10500,2.95,TRUE,'2024-03-28 09:00:00+00','2024-03-28 09:45:00+00','2024-03-28 09:05:00+00'),
+('RPT-0025','CUS-0049','risk_analysis','agent-1','claude-3','https://blob.example.com/rpt-0025.pdf',18,12600,3.55,FALSE,'2024-03-27 12:15:00+00',NULL,'2024-03-27 12:20:00+00')
+ON CONFLICT DO NOTHING;

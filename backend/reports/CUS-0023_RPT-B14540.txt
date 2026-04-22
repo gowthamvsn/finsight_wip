@@ -1,0 +1,263 @@
+# FinSight Wealth Management
+## CLIENT ADVISORY REPORT
+
+---
+
+**Client:** Felix Weber | **Account ID:** CUS-0023
+**Report Date:** April 22, 2026
+**Advisor Tier:** Premium | **Risk Profile:** Aggressive
+**Prepared by:** FinSight Report Generator — Automated Advisory System
+
+---
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Mr. Weber's portfolio currently stands at **$182,763.50**, built on an aggregate cost basis that reflects a long-held, highly concentrated position in Bitcoin alongside equity holdings in Meta Platforms (META) and NVIDIA (NVDA). The portfolio has generated substantial unrealized gains, predominantly driven by the BTC position acquired in April 2020.
+
+| Metric | Value |
+|---|---|
+| Total Portfolio Value | $182,763.50 |
+| Net Worth (Portfolio − Loans) | $119,763.50 |
+| Cash Balance | $13,000.00 |
+| Unrealized P&L | $147,263.50 |
+| Realized P&L (YTD) | $0.00 |
+| Net P&L | $145,563.50 |
+| Outstanding Loan | $76,000.00 |
+| Interest Paid YTD | $1,700.00 |
+| Annualized Return | Not available |
+| S&P 500 Benchmark | Not available |
+
+> **Note:** Annualized return and S&P 500 benchmark figures were unavailable at the time of report generation and have been omitted. Comparative performance analysis cannot be completed without these data points.
+
+The portfolio's headline story is one of exceptional long-term gain tempered by a **critical and persistent concentration risk breach** in cryptocurrency. This requires immediate attention and is addressed in detail throughout this report.
+
+---
+
+---
+
+## 2. PORTFOLIO PERFORMANCE — BY ASSET CLASS
+
+### 2.1 Cryptocurrency (BTC) — 85.40% of Portfolio
+*Current Value: $156,048.50*
+
+| Detail | Data |
+|---|---|
+| Asset | Bitcoin (BTC) |
+| Quantity Held | 2.000000 BTC |
+| Average Buy Price | $9,000.00 |
+| Current Price | $78,024.25 |
+| Current Value | $156,048.50 |
+| Unrealized P&L | **+$138,048.50 (+766.94%)** |
+
+Bitcoin is the undisputed engine of Mr. Weber's portfolio. The 2 BTC position, acquired on **April 1, 2020** at $9,000 per coin, has appreciated by **766.94%**, generating $138,048.50 in unrealized gains. This single asset constitutes **85.40%** of total portfolio value, a concentration level that, while enormously profitable to date, introduces extreme volatility and tail-risk exposure. A 20% drawdown in BTC alone (not historically uncommon) would erase approximately **$31,210** in portfolio value — roughly **26% of current net worth**.
+
+---
+
+### 2.2 Equities (Stocks) — 14.60% of Portfolio
+*Combined Current Value: $26,715.00*
+
+#### META Platforms (META)
+| Detail | Data |
+|---|---|
+| Quantity Held | 25 shares |
+| Average Buy Price | $200.00 |
+| Current Price | $668.84 |
+| Current Value | $16,721.00 |
+| Unrealized P&L | **+$11,721.00 (+234.42%)** |
+
+META has been a strong long-term performer since its May 2020 purchase. The position has more than tripled in value and remains a healthy contributor to portfolio diversification relative to crypto.
+
+---
+
+#### NVIDIA (NVDA)
+| Detail | Data |
+|---|---|
+| Quantity Held | 50 shares |
+| Average Buy Price | $250.00 |
+| Current Price | $199.88 |
+| Current Value | $9,994.00 |
+| Unrealized P&L | **−$2,506.00 (−20.05%)** |
+
+> ⚠️ **FLAGGED TRANSACTION NOTE:** A separate purchase of **70 shares of NVDA at $780.00 per share ($54,600 total) on December 10, 2023** has been flagged in the transaction log. This transaction does **not** appear to be reflected in the current holdings data (current qty = 50 shares at avg cost $250.00). This discrepancy requires urgent clarification with your advisor and/or back-office operations team. The report reflects only the holdings data as currently recorded.
+
+The current NVDA position is the only holding in loss territory, sitting **20.05% below cost basis**. Given the flagged transaction anomaly noted above, the true NVDA exposure may differ materially from what is reported here.
+
+---
+
+### 2.3 ETFs — 0.00% of Portfolio
+No ETF positions are currently held.
+
+---
+
+### 2.4 Cash — 7.10% of Portfolio
+*Cash Balance: $13,000.00*
+
+Cash reserves stand at $13,000, representing approximately 7.1% of total portfolio value. While this provides some liquidity buffer, it is offset by a $76,000 outstanding loan obligation (see Section 5).
+
+---
+
+---
+
+## 3. RISK ASSESSMENT
+
+### 3.1 Risk Profile Limits — Cryptocurrency Allocation
+
+| Risk Profile | Crypto Limit | Current Allocation | Status |
+|---|---|---|---|
+| Conservative | 10% | 85.40% | N/A |
+| Moderate | 25% | 85.40% | N/A |
+| **Aggressive** | **50%** | **85.40%** | 🔴 **BREACH — +35.40 pp over limit** |
+
+Mr. Weber's aggressive risk profile permits a **maximum cryptocurrency allocation of 50%**. His current allocation of **85.40%** exceeds this threshold by **35.40 percentage points**, representing a breach of **more than 1.7× the permitted maximum**.
+
+### 3.2 Breach History & Severity
+The alert log records **10 consecutive unresolved HIGH-severity risk breach notifications**, all related to this same crypto over-concentration. The persistent, unresolved nature of these alerts indicates this is not a transient market fluctuation but a **structural portfolio imbalance** that has been flagged repeatedly without remedial action.
+
+### 3.3 Concentration Risk Analysis
+
+```
+Portfolio Concentration at a Glance:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BTC     ██████████████████████████████████  85.40%
+META    ████                                 9.15%
+NVDA    ██                                   5.47%
+CASH    █                                    7.10%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+A single asset (BTC) accounts for more than **85 cents of every dollar** in Mr. Weber's portfolio. While the unrealized gain is exceptional, this structure means that portfolio performance is almost entirely dependent on one volatile, unregulated asset class. Idiosyncratic Bitcoin risk — including regulatory action, exchange failures, technical vulnerabilities, or market sentiment shifts — is not diversified away in any meaningful sense.
+
+### 3.4 Leverage Risk
+The outstanding personal loan of $76,000 at 6.20% APR adds a layer of **leveraged risk** to the overall financial picture. Should Bitcoin experience a significant drawdown, Mr. Weber's net worth could contract sharply while loan obligations remain fixed. Net worth of $119,763.50 could be reduced to under $60,000 with a ~40% BTC correction — scenarios that have occurred multiple times historically in Bitcoin's trading history.
+
+---
+
+---
+
+## 4. MARKET INSIGHTS — ML MODEL PREDICTIONS (5-DAY HORIZON)
+
+> **Important Caveat:** The following predictions are generated by a quantitative ML model and represent probabilistic short-term directional signals only. They are provided for informational context and should **not** be interpreted as guaranteed outcomes or the sole basis for any trading decision.
+
+| Asset | Asset Class | 5-Day Predicted Move | Signal |
+|---|---|---|---|
+| BTC | Crypto | **+0.07%** | Marginally Positive / Flat |
+| META | Stock | **−1.17%** | Mildly Negative |
+| NVDA | Stock | **−0.73%** | Mildly Negative |
+
+### 4.1 Interpretation
+
+**Bitcoin (BTC) — +0.07%:** The model projects near-flat performance for BTC over the next five trading days. Given BTC's historical intraday and weekly volatility, a 0.07% predicted move is effectively a neutral signal — it implies no strong directional conviction in either direction over this short window. This should **not** be read as a confirmation of stability.
+
+**META Platforms — −1.17%:** A mild predicted decline of approximately 1.17% over five days. At a current value of $16,721, this would imply approximately $195 in unrealized value at risk on a short-term basis — a modest figure. META's long-term gain (+234%) provides substantial buffer against short-term fluctuations of this magnitude.
+
+**NVIDIA — −0.73%:** The model signals a mild negative move for NVDA. Given the position is already in loss territory (−20.05%), continued softness would incrementally deepen the unrealized loss. However, the five-day predicted move of −0.73% on a $9,994 position represents approximately $73 in near-term movement — not material in isolation.
+
+**Overall Short-Term Outlook:** No ML signal across the three holdings is strongly bullish over the five-day window. The equity positions face mild headwinds per the model. BTC is projected to be largely unchanged. These signals do not alter the longer-term strategic recommendations in this report.
+
+---
+
+---
+
+## 5. LOAN & DEBT SUMMARY
+
+| Loan Type | Outstanding Balance | Interest Rate | Monthly EMI | Status |
+|---|---|---|---|---|
+| Personal Loan | $76,000.00 | 6.20% APR | $1,245.90 | ✅ Current |
+
+### 5.1 Debt Service Analysis
+
+- **Monthly Obligation:** $1,245.90
+- **Annual Debt Service Cost:** ~$14,950.80
+- **Interest Paid YTD (2026):** $1,700.00
+- **Loan Status:** Current — no delinquency noted
+
+The personal loan is being serviced on time, which is positive. However, the $76,000 balance represents a significant liability against a net worth of $119,763.50, meaning **approximately 38.8% of Mr. Weber's gross portfolio value is effectively leveraged**.
+
+### 5.2 Debt-to-Net-Worth Ratio
+> **$76,000 loan ÷ $119,763.50 net worth = 63.5% debt-to-net-worth ratio**
+
+This is an elevated ratio. Given that the dominant portfolio asset (BTC) carries high volatility, the combination of leverage and concentration risk is the most significant financial vulnerability in Mr. Weber's current position. A major crypto drawdown would simultaneously compress asset values while loan obligations remain unchanged.
+
+### 5.3 Cash vs. Loan Context
+Mr. Weber holds $13,000 in cash against a $76,000 loan. While maintaining some liquidity is prudent, it is worth evaluating whether a portion of cash reserves could be applied toward loan principal reduction to lower interest costs, depending on loan prepayment terms.
+
+---
+
+---
+
+## 6. ALERTS & ACTIONS REQUIRED
+
+### 🔴 CRITICAL — Immediate Attention Required
+
+| Alert ID | Severity | Type | Detail | Status |
+|---|---|---|---|---|
+| RISK-001 through RISK-010 | 🔴 HIGH | Risk Breach | Crypto allocation (85.40%) exceeds aggressive profile limit (50.00%) by 35.40 pp | **OPEN × 10** |
+
+**Assessment:** Ten consecutive unresolved HIGH-severity risk breach alerts for the same underlying issue indicate that this concentration breach has been persistent and unaddressed. Under FinSight's premium advisory framework, repeated open HIGH alerts of this nature typically trigger an **escalated advisor review requirement**.
+
+**Recommended Immediate Response:**
+1. Schedule a formal portfolio rebalancing consultation with your assigned premium advisor.
+2. Acknowledge and formally respond to the open alerts through the FinSight platform.
+3. Review whether the current allocation reflects a deliberate, documented client override or an oversight — this distinction has compliance and fiduciary implications.
+
+---
+
+### ⚠️ FLAGGED TRANSACTION — Requires Clarification
+
+| Transaction | Date | Detail | Status |
+|---|---|---|---|
+| BUY 70 NVDA @ $780.00 | 2023-12-10 | $54,600 purchase not reflected in current holdings | **FLAGGED** |
+
+This transaction is recorded in the transaction log but does not reconcile with the current NVDA holding of 50 shares at $250.00 average cost. Possible explanations include a partial or full subsequent sale not shown in the available transaction history, a data entry error, or a settlement/transfer issue. **This discrepancy must be investigated and resolved with your advisor and FinSight's operations team before any NVDA-related decisions are made.**
+
+---
+
+---
+
+## 7. RECOMMENDATIONS
+
+The following recommendations are based strictly on the data provided. They are advisory in nature and do not constitute a binding instruction to trade. Mr. Weber should review all recommendations with his assigned premium advisor before taking action.
+
+---
+
+### Recommendation 1 — Rebalance Cryptocurrency Allocation to Comply with Risk Profile Limits
+**Priority: HIGH | Action: Reduce BTC Concentration**
+
+The most pressing structural issue is the 85.40% BTC allocation against a 50% maximum for the aggressive profile. To bring the portfolio into compliance, BTC exposure would need to be reduced from $156,048.50 to approximately **$91,381.75** (50% of total portfolio value), implying a potential partial liquidation of approximately **$64,666.75 worth of BTC** (~0.829 BTC at current prices).
+
+The proceeds could be redeployed into diversifying instruments such as broad-market ETFs, additional equity positions, or partial loan repayment. Any such transaction carries tax implications (capital gains on unrealized appreciation) and should be planned with tax-aware execution in mind. The advisor should also document whether Mr. Weber elects to maintain the current allocation as a **client-directed override** with full acknowledgment of the associated risks.
+
+---
+
+### Recommendation 2 — Resolve the NVDA Transaction Discrepancy Before Any Further NVDA Activity
+**Priority: HIGH | Action: Audit & Reconcile**
+
+The flagged December 2023 NVDA purchase of $54,600 (70 shares at $780.00) does not appear reflected in current holdings. Before considering any buy, hold, or sell decision on NVDA, this discrepancy must be fully reconciled. Attempting to make position decisions on potentially incomplete data could result in unintended over- or under-exposure. Contact FinSight's operations/back-office team and request a full NVDA transaction history reconciliation.
+
+---
+
+### Recommendation 3 — Evaluate Partial Loan Repayment Using Cash Reserves
+**Priority: MEDIUM | Action: Reduce Leverage**
+
+Mr. Weber holds $13,000 in cash earning minimal returns while servicing a $76,000 loan at 6.20% APR. Subject to the personal loan's prepayment terms, applying a portion of cash holdings toward principal reduction would:
+- Save approximately **$806 in annual interest** if $13,000 were applied in full (6.20% × $13,000)
+- Reduce the debt-to-net-worth ratio
+- Lower overall financial leverage at a time of elevated portfolio concentration risk
+
+The trade-off is reduced liquidity. A target minimum cash buffer (e.g., 3–6 months of EMI coverage = ~$3,700–$7,500) should be maintained before applying excess cash to loan repayment.
+
+---
+
+### Recommendation 4 — Introduce ETF Diversification to Reduce Single-Asset Dependency
+**Priority: MEDIUM | Action: Portfolio Diversification**
+
+The current ETF allocation is 0.00%. For an aggressive-profile investor, broad-based index ETFs (e.g., tracking the S&P 500, NASDAQ-100, or global equities) can provide market exposure with significantly lower concentration risk than individual positions. Following any BTC rebalancing (Recommendation 1), a portion of redeployed capital should be considered for diversified ETF instruments. This would reduce the binary dependence on Bitcoin's performance trajectory.
+
+---
+
+### Recommendation 5 — Establish a Formal Review Cadence for Recurring Alerts
+**Priority: LOW-MEDIUM | Action: Process & Governance**
+
+The accumulation of 10 identical open HIGH alerts suggests a gap in the alert acknowledgment and resolution process. As a premium-tier client, Mr. Weber should be engaging with portfolio alerts on a regular basis

@@ -1,0 +1,254 @@
+# FINSIGHT WEALTH MANAGEMENT
+## CLIENT ADVISORY REPORT
+
+---
+
+**Client:** Omar Nasser | **Client ID:** CUS-0017
+**Advisor Tier:** Elite | **Risk Profile:** Aggressive
+**Report Date:** April 22, 2026
+**Report Classification:** Confidential — For Addressee Only
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Mr. Nasser's portfolio reflects an extraordinary long-term capital appreciation story, driven almost entirely by early-stage cryptocurrency acquisitions made in late 2019 and early 2020. Total portfolio value stands at **$264,335.03**, against a net worth of **$229,335.03** after accounting for a $54,000 personal loan liability.
+
+The headline figure is a **cumulative net P&L of $224,775.03** — representing unrealized gains of $221,435.03 and realized gains of $4,440.00. This performance is a direct result of concentrated, high-conviction positioning in Bitcoin and Ethereum at historically low entry prices.
+
+However, the portfolio carries a **critical structural risk**: cryptocurrency now constitutes **93.20% of total portfolio value**, which materially exceeds the maximum 50% crypto threshold permitted under Mr. Nasser's own aggressive risk profile. This breach has triggered **10 consecutive HIGH-severity alerts** that remain open and unaddressed. Immediate remedial action is warranted.
+
+| Metric | Value |
+|---|---|
+| Portfolio Value | $264,335.03 |
+| Net Worth (after liabilities) | $229,335.03 |
+| Cash Balance | $19,000.00 |
+| Unrealized P&L | $221,435.03 |
+| Realized P&L | $4,440.00 |
+| Net P&L | $224,775.03 |
+| Interest Paid YTD | $1,100.00 |
+| Loan Outstanding | $54,000.00 |
+| Annualized Return | Not available |
+| S&P 500 Benchmark | Not available |
+
+> ⚠️ **Note:** Annualized return and S&P 500 benchmark data were unavailable at the time of report generation. Comparative performance analysis against the benchmark cannot be presented in this cycle. We recommend this data be sourced and included in the next reporting period.
+
+---
+
+## 2. PORTFOLIO PERFORMANCE BY ASSET CLASS
+
+### 2.1 Overall Allocation
+
+| Asset Class | Allocation | Value |
+|---|---|---|
+| Cryptocurrency | 93.20% | ~$246,345.83 |
+| Equities (Stocks) | 6.80% | ~$17,989.20 |
+| ETFs | 0.00% | $0.00 |
+| Cash | 7.20% | $19,000.00 |
+
+> *Note: Allocation percentages are calculated against portfolio value. Cash is reported separately from the allocation split above as provided by the system.*
+
+---
+
+### 2.2 Individual Holdings Detail
+
+#### 🟠 Bitcoin (BTC) — Cryptocurrency
+| Field | Detail |
+|---|---|
+| Quantity | 3.000000 BTC |
+| Average Buy Price | $8,500.00 |
+| Current Price (Live) | $78,111.99 |
+| Current Value | $234,335.98 |
+| Unrealized P&L | **+$208,835.98 (+818.96%)** |
+| 5-Day ML Prediction | +4.14% |
+| First Purchased | December 1, 2019 |
+
+Bitcoin is unambiguously the portfolio's defining position. Acquired at $8,500 per coin in December 2019, this holding has appreciated by over **818%**, contributing $208,835.98 in unrealized gains — representing approximately **92.9% of total portfolio P&L**. This is a generational trade, and Mr. Nasser's discipline in holding through multiple market cycles deserves acknowledgment. However, the concentration risk this creates is now the portfolio's most pressing concern.
+
+---
+
+#### 🟣 Ethereum (ETH) — Cryptocurrency
+| Field | Detail |
+|---|---|
+| Quantity | 5.000000 ETH |
+| Average Buy Price | $240.00 |
+| Current Price (Live) | $2,401.97 |
+| Current Value | $12,009.85 |
+| Unrealized P&L | **+$10,809.85 (+900.82%)** |
+| 5-Day ML Prediction | +0.22% |
+| Original Purchase | January 1, 2020 |
+| Prior ETH Sold | 1.5 ETH @ $3,200 on Jan 20, 2024 |
+
+Ethereum represents another exceptional long-term position, purchased at $240 in January 2020 and currently showing a **900.82% gain** — the highest percentage return in the portfolio. It is worth noting that 1.5 ETH was sold in January 2024 at $3,200, generating $4,800 in realized proceeds. The current position of 5 ETH reflects the remaining holdings. At current prices, this realized sale, while profitable, occurred at prices well below today's valuation ($2,401.97 vs. the $3,200 sale price suggests timing was favorable at the time, relative to some periods, though the asset has since seen price movement).
+
+---
+
+#### 🟢 NVIDIA Corporation (NVDA) — Equity
+| Field | Detail |
+|---|---|
+| Quantity | 90 shares |
+| Average Buy Price | $180.00 |
+| Current Price (Live) | $199.88 |
+| Current Value | $17,989.20 |
+| Unrealized P&L | **+$1,789.20 (+11.04%)** |
+| 5-Day ML Prediction | +2.59% |
+| Purchased | November 1, 2019 |
+
+NVDA provides the portfolio's sole equity exposure. While the 11.04% unrealized gain is positive, this position is dwarfed by the cryptocurrency holdings in both size and return. It does, however, represent meaningful exposure to the AI and semiconductor sector, which aligns with long-term technology themes.
+
+> ⚠️ **Transaction Note:** Records show a purchase of **30 shares of MSFT at $415.00 on March 25, 2024** ($12,450.00 total). However, **MSFT does not appear in the current holdings**. This suggests the position may have been sold, transferred, or there may be a data discrepancy. **We strongly recommend Mr. Nasser verify the status of this MSFT transaction with his advisor immediately.**
+
+---
+
+#### 💵 Cash
+| Field | Detail |
+|---|---|
+| Cash Balance | $19,000.00 |
+| Allocation | 7.20% of portfolio |
+
+The current cash balance of $19,000.00 provides a modest liquidity buffer and is sufficient to cover approximately **19.5 months of loan EMI payments** ($975.45/month), offering reasonable near-term debt service security.
+
+---
+
+## 3. RISK ASSESSMENT
+
+### 3.1 Risk Profile vs. Actual Allocation
+
+| Risk Category | Max Crypto Limit (Policy) | Actual Crypto Allocation | Status |
+|---|---|---|---|
+| Conservative | 10.00% | 93.20% | — |
+| Moderate | 25.00% | 93.20% | — |
+| **Aggressive (Mr. Nasser's Profile)** | **50.00%** | **93.20%** | 🔴 **BREACH** |
+
+Mr. Nasser's crypto allocation of **93.20% exceeds his aggressive profile limit by 43.20 percentage points**. Even under the most risk-tolerant classification available, this portfolio is structurally misaligned. This is not a borderline breach — it is a substantial and sustained deviation.
+
+---
+
+### 3.2 Concentration Risk
+
+- **Single-asset dependency:** Bitcoin alone accounts for approximately **88.7% of total portfolio value** ($234,335.98 / $264,335.03). A 30% decline in BTC price would reduce portfolio value by approximately $70,300 — erasing the net worth cushion and potentially creating a situation where loan liabilities represent a meaningful portion of remaining assets.
+- **Sector concentration:** 93.20% in a single asset class (crypto) with high inter-correlation between BTC and ETH means the portfolio lacks meaningful diversification.
+- **Leverage consideration:** While the personal loan appears unrelated to investment activity, the $54,000 liability means net worth is sensitive to portfolio drawdowns.
+
+### 3.3 Risk Summary Rating
+
+| Risk Factor | Assessment |
+|---|---|
+| Concentration Risk | 🔴 Critical |
+| Crypto Volatility Exposure | 🔴 High |
+| Liquidity Risk | 🟡 Moderate (cash buffer exists) |
+| Debt Servicing Risk | 🟢 Low (current, manageable EMI) |
+| Overall Portfolio Risk | 🔴 Elevated — Action Required |
+
+---
+
+## 4. MARKET INSIGHTS (ML-Based 5-Day Predictions)
+
+> **Important Caveat:** The following insights are based on short-term machine learning model outputs covering a 5-day forward window only. These are statistical estimates, not guarantees. They should not be the sole basis for any buy or sell decision. Please refer to the Risk Disclaimer in Section 8.
+
+| Asset | 5-Day Predicted Move | Signal Interpretation |
+|---|---|---|
+| BTC | **+4.14%** | Modestly bullish short-term signal |
+| NVDA | **+2.59%** | Moderately bullish short-term signal |
+| ETH | **+0.22%** | Essentially neutral short-term signal |
+
+### Key Observations:
+
+- **BTC (+4.14%):** The model suggests continued near-term upward momentum for Bitcoin. Given that BTC represents the vast majority of portfolio value, even a modest positive move would translate to significant dollar-value appreciation (~+$9,700 on the current position if realized).
+
+- **NVDA (+2.59%):** A positive short-term signal for NVDA, consistent with ongoing AI/semiconductor sector interest. Given the relatively small position size, dollar impact would be limited (~+$466 on current position if realized).
+
+- **ETH (+0.22%):** The near-flat signal for ETH suggests the model anticipates sideways movement in the immediate 5-day window. This does not reflect the long-term thesis for the asset.
+
+**Aggregate Portfolio 5-Day Sensitivity (illustrative only, assuming predictions materialize):**
+
+| Asset | Current Value | Predicted Change | Estimated Impact |
+|---|---|---|---|
+| BTC (+4.14%) | $234,335.98 | +4.14% | +~$9,701 |
+| ETH (+0.22%) | $12,009.85 | +0.22% | +~$26 |
+| NVDA (+2.59%) | $17,989.20 | +2.59% | +~$466 |
+| **Total Estimated Impact** | | | **+~$10,193** |
+
+*This is a model-derived illustration only and does not constitute a forecast or guarantee of returns.*
+
+---
+
+## 5. LOAN & DEBT SUMMARY
+
+| Loan Type | Outstanding Balance | Interest Rate | Monthly EMI | Status |
+|---|---|---|---|---|
+| Personal Loan | $54,000.00 | 5.80% p.a. | $975.45 | ✅ Current |
+
+### Analysis:
+
+- The personal loan is **current with no delinquency**, which is a positive indicator of Mr. Nasser's debt management discipline.
+- At a 5.80% annual interest rate, the annualized interest cost is approximately **$3,132** (based on outstanding balance), against which $1,100 has been paid YTD — consistent with year-to-date accrual through April.
+- **Debt-to-Portfolio Ratio:** $54,000 / $264,335.03 = **20.4%** — elevated but not immediately alarming given current portfolio levels.
+- **Debt-to-Net Worth Ratio:** $54,000 / $229,335.03 = **23.5%** — manageable at present portfolio valuations.
+- **Critical Scenario:** If the crypto market were to decline sharply (e.g., a 50% BTC correction), portfolio value could fall to approximately **$147,167**, elevating the debt-to-portfolio ratio to ~36.7% and materially compressing net worth.
+- The $19,000 cash balance covers **approximately 19.5 months** of EMI payments, providing a reasonable liquidity cushion for debt servicing.
+
+**Recommendation consideration:** Given the elevated portfolio risk, using a portion of gains realized through rebalancing to reduce the loan principal could be a prudent financial planning step.
+
+---
+
+## 6. ALERTS & ACTIONS REQUIRED
+
+### 🔴 Active HIGH-Priority Alerts
+
+| Alert ID | Type | Description | Severity | Status |
+|---|---|---|---|---|
+| x10 Repeated | Risk Breach | Crypto allocation (93.20%) exceeds aggressive profile limit (50.00%) by 43.20pp | HIGH | 🔴 OPEN |
+
+### Alert Commentary:
+
+The system has generated **10 consecutive unresolved HIGH-severity risk breach alerts** — all of the same type. The repetition of this alert without resolution is a significant concern. This pattern indicates that:
+
+1. **The breach has been persistent** and is not a recent or transient condition.
+2. **No corrective action has been taken**, either through rebalancing or a formal profile limit override with documented client consent.
+3. **Regulatory and compliance exposure** may be accumulating for the Elite advisor relationship if these alerts are not formally acknowledged and addressed.
+
+**Required Actions:**
+
+- [ ] **Immediate:** Advisor and client must formally acknowledge and respond to open risk breach alerts.
+- [ ] **Within 5 business days:** A rebalancing plan or a documented, signed waiver confirming the client's informed decision to maintain current allocation must be placed on file.
+- [ ] **MSFT Position Clarification:** The March 2024 MSFT purchase of $12,450.00 does not appear in current holdings. This discrepancy must be investigated and reconciled.
+- [ ] **Alert System Review:** Investigate why 10 identical alerts were generated without triggering an advisor escalation workflow.
+
+---
+
+## 7. RECOMMENDATIONS
+
+The following recommendations are specific, actionable, and grounded strictly in the data presented in this report. They are provided for advisory consideration and do not constitute a directive to trade.
+
+---
+
+### Recommendation 1: Execute a Phased Crypto Rebalancing Plan 🔴 *Priority: Critical*
+
+**Action:** Develop and implement a structured, phased plan to reduce cryptocurrency exposure from 93.20% toward the 50% policy limit, or formally document an informed waiver if Mr. Nasser elects to maintain this allocation against policy.
+
+**Rationale:** The persistent 43.20 percentage point breach of the aggressive profile crypto limit is a material compliance and risk management issue. At current valuations, bringing crypto to 50% of the portfolio would involve moving approximately **$113,000–$114,000** out of BTC and/or ETH into diversified assets. A phased approach (e.g., liquidating a fraction of BTC quarterly) would reduce market timing risk and allow for tax planning.
+
+**Consideration:** Any realization of crypto gains will trigger significant **capital gains tax liability**, given the extraordinary low cost basis (BTC at $8,500; ETH at $240). A tax advisor should be consulted before any sale is executed.
+
+---
+
+### Recommendation 2: Diversify into Equities and/or ETFs 🟡 *Priority: High*
+
+**Action:** Allocate proceeds from any crypto rebalancing into a diversified mix of equities and/or broad-market ETFs to build a more resilient portfolio structure.
+
+**Rationale:** The portfolio currently has 0% ETF exposure and only 6.80% equity exposure. Adding diversified equity exposure — including broad index ETFs, sector ETFs, or individual equities beyond NVDA — would reduce crypto concentration, add asset class diversity, and introduce uncorrelated return streams. This is consistent with an aggressive profile that still maintains meaningful growth exposure.
+
+**Note:** Specific securities for investment are not recommended in this report, as security selection requires current market analysis beyond the scope of this document.
+
+---
+
+### Recommendation 3: Clarify and Reconcile the MSFT Position 🟡 *Priority: High*
+
+**Action:** Immediately investigate the status of the March 25, 2024 purchase of 30 shares of MSFT at $415.00 ($12,450.00 total), which does not appear in current holdings.
+
+**Rationale:** A $12,450 transaction with no corresponding current holding represents either (a) an undocumented sale, (b) a data integrity issue, or (c) a potential operational error. Any of these scenarios requires prompt resolution. If MSFT was sold, the realized P&L, proceeds, and tax implications should be documented. If this is a data discrepancy, portfolio records must be corrected.
+
+---
+
+###

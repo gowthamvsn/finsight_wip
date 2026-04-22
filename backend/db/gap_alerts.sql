@@ -1,0 +1,78 @@
+-- Gap alerts: ALT-0016 to ALT-0080 (65 rows)
+-- Types: large_txn(10), geo_anomaly(10), loan_overdue(10), risk_breach(12), rapid_txn(8), rebalance(8), ml_anomaly(7)
+-- Severity: critical(7), high(20), medium(25), low(13)
+-- Status: open(30), review(12), resolved(15), escalated(8)
+INSERT INTO alerts VALUES
+-- === LARGE_TXN (10) — source: rule ===
+('ALT-0016','CUS-0001','TXN-9105','large_txn','medium','rule','VTSAX sell $5,400 exceeds single-trade threshold','open',FALSE,'2025-03-15 10:00:00+00',NULL,'2025-03-15 10:00:00+00'),
+('ALT-0017','CUS-0005','TXN-9106','large_txn','high','rule','META sell $7,350 flagged for review','review',TRUE,'2025-01-20 11:30:00+00',NULL,'2025-01-20 11:30:00+00'),
+('ALT-0018','CUS-0017','TXN-9107','large_txn','medium','rule','ETH sell $4,800 exceeds daily limit','resolved',TRUE,'2024-08-10 09:15:00+00','2024-08-12 14:00:00+00','2024-08-12 14:00:00+00'),
+('ALT-0019','CUS-0021','TXN-9108','large_txn','high','rule','SPY sell $12,750 requires advisor sign-off','escalated',TRUE,'2024-10-15 14:00:00+00',NULL,'2024-10-15 14:00:00+00'),
+('ALT-0020','CUS-0025','TXN-9109','large_txn','medium','rule','MSFT sell $8,300 recorded for compliance','resolved',FALSE,'2024-12-05 10:30:00+00','2024-12-07 09:00:00+00','2024-12-07 09:00:00+00'),
+('ALT-0021','CUS-0033','TXN-9110','large_txn','high','rule','QQQ sell $13,800 exceeds weekly threshold','open',TRUE,'2025-02-08 11:15:00+00',NULL,'2025-02-08 11:15:00+00'),
+('ALT-0022','CUS-0045','TXN-9112','large_txn','high','rule','SPY sell $20,400 flagged for advisor review','escalated',TRUE,'2025-03-05 14:00:00+00',NULL,'2025-03-05 14:00:00+00'),
+('ALT-0023','CUS-0029','TXN-9135','large_txn','medium','rule','ETH purchase $2,400 logged','resolved',FALSE,'2024-07-08 09:30:00+00','2024-07-10 10:00:00+00','2024-07-10 10:00:00+00'),
+('ALT-0024','CUS-0020','TXN-9129','large_txn','high','rule','NVDA purchase $23,400 exceeds single-trade limit','review',TRUE,'2025-01-28 10:00:00+00',NULL,'2025-01-28 10:00:00+00'),
+('ALT-0025','CUS-0041','TXN-9157','large_txn','low','rule','MSFT purchase $9,000 within normal parameters','resolved',FALSE,'2024-06-15 11:00:00+00','2024-06-16 09:00:00+00','2024-06-16 09:00:00+00'),
+-- === GEO_ANOMALY (10) — linked to flagged txns + standalone ===
+('ALT-0026','CUS-0011','TXN-9100','geo_anomaly','critical','ml_model','BTC transaction from Russia (RU) at 23:45 UTC — high-risk jurisdiction','escalated',TRUE,'2023-08-21 00:10:00+00',NULL,'2023-08-21 00:10:00+00'),
+('ALT-0027','CUS-0023','TXN-9101','geo_anomaly','critical','ml_model','NVDA buy from China (CN) at 02:15 UTC — off-hours suspicious activity','escalated',TRUE,'2023-12-10 02:30:00+00',NULL,'2023-12-10 02:30:00+00'),
+('ALT-0028','CUS-0035','TXN-9102','geo_anomaly','high','ml_model','ETH purchase from Nigeria (NG) at 03:30 UTC — flagged jurisdiction','review',TRUE,'2024-01-05 03:45:00+00',NULL,'2024-01-05 03:45:00+00'),
+('ALT-0029','CUS-0041','TXN-9103','geo_anomaly','critical','ml_model','BTC purchase from Russia (RU) at 00:45 UTC — sanctions-adjacent region','escalated',TRUE,'2024-02-15 01:00:00+00',NULL,'2024-02-15 01:00:00+00'),
+('ALT-0030','CUS-0047','TXN-9104','geo_anomaly','critical','ml_model','NVDA buy from China (CN) at 04:00 UTC — off-hours unusual volume','review',TRUE,'2024-03-20 04:15:00+00',NULL,'2024-03-20 04:15:00+00'),
+('ALT-0031','CUS-0008',NULL,'geo_anomaly','high','ml_model','Login from unexpected country DE while customer abroad','open',FALSE,'2025-01-10 13:00:00+00',NULL,'2025-01-10 13:00:00+00'),
+('ALT-0032','CUS-0014',NULL,'geo_anomaly','medium','rule','Transaction country mismatch: expected AU, received AE','resolved',TRUE,'2024-09-18 10:00:00+00','2024-09-20 11:00:00+00','2024-09-20 11:00:00+00'),
+('ALT-0033','CUS-0026',NULL,'geo_anomaly','high','ml_model','SOL purchase from SG at unusual hour for customer profile','review',FALSE,'2024-11-22 02:30:00+00',NULL,'2024-11-22 02:30:00+00'),
+('ALT-0034','CUS-0032',NULL,'geo_anomaly','medium','rule','Multiple countries detected in 24hr window: UK and CN','open',FALSE,'2025-02-14 08:00:00+00',NULL,'2025-02-14 08:00:00+00'),
+('ALT-0035','CUS-0044',NULL,'geo_anomaly','high','ml_model','Transaction geo-velocity anomaly: 2 countries in 6 hours','open',TRUE,'2025-03-12 15:00:00+00',NULL,'2025-03-12 15:00:00+00'),
+-- === LOAN_OVERDUE (10) — linked to overdue loans LN-0026 to LN-0035 ===
+('ALT-0036','CUS-0002',NULL,'loan_overdue','high','rule','Personal loan LN-0026 overdue since 2025-01-15 — 2 months past due','escalated',TRUE,'2025-03-16 08:00:00+00',NULL,'2025-03-16 08:00:00+00'),
+('ALT-0037','CUS-0004',NULL,'loan_overdue','medium','rule','Auto loan LN-0027 overdue since 2025-01-20 — EMI missed','open',TRUE,'2025-02-20 09:00:00+00',NULL,'2025-02-20 09:00:00+00'),
+('ALT-0038','CUS-0006',NULL,'loan_overdue','medium','rule','Student loan LN-0028 overdue since 2025-02-01 — contact customer','open',FALSE,'2025-03-01 09:30:00+00',NULL,'2025-03-01 09:30:00+00'),
+('ALT-0039','CUS-0008',NULL,'loan_overdue','high','rule','Personal loan LN-0029 overdue since 2025-02-10 — escalate to advisor','review',TRUE,'2025-03-10 10:00:00+00',NULL,'2025-03-10 10:00:00+00'),
+('ALT-0040','CUS-0010',NULL,'loan_overdue','high','rule','Margin loan LN-0030 overdue since 2025-02-20 — margin call risk','escalated',TRUE,'2025-03-20 11:00:00+00',NULL,'2025-03-20 11:00:00+00'),
+('ALT-0041','CUS-0012',NULL,'loan_overdue','medium','rule','Auto loan LN-0031 overdue since 2025-03-01 — first missed payment','open',FALSE,'2025-04-01 09:00:00+00',NULL,'2025-04-01 09:00:00+00'),
+('ALT-0042','CUS-0014',NULL,'loan_overdue','high','rule','Personal loan LN-0032 overdue since 2025-03-10 — credit risk elevated','review',TRUE,'2025-04-10 10:00:00+00',NULL,'2025-04-10 10:00:00+00'),
+('ALT-0043','CUS-0016',NULL,'loan_overdue','medium','rule','Student loan LN-0033 overdue since 2025-03-15 — send reminder','open',FALSE,'2025-04-15 09:30:00+00',NULL,'2025-04-15 09:30:00+00'),
+('ALT-0044','CUS-0018',NULL,'loan_overdue','low','rule','Auto loan LN-0034 overdue since 2025-03-18 — first notice sent','open',TRUE,'2025-04-18 08:00:00+00',NULL,'2025-04-18 08:00:00+00'),
+('ALT-0045','CUS-0020',NULL,'loan_overdue','high','rule','Personal loan LN-0035 overdue since 2025-03-20 — payment plan required','review',TRUE,'2025-04-20 10:00:00+00',NULL,'2025-04-20 10:00:00+00'),
+-- === RISK_BREACH (12) ===
+('ALT-0046','CUS-0002',NULL,'risk_breach','high','rule','Crypto 46.0% exceeds aggressive limit 30% — rebalance required','open',TRUE,'2025-04-01 09:00:00+00',NULL,'2025-04-01 09:00:00+00'),
+('ALT-0047','CUS-0008',NULL,'risk_breach','medium','rule','Crypto 17.9% exceeds aggressive limit 15% — monitor closely','resolved',FALSE,'2024-07-15 10:00:00+00','2024-07-18 11:00:00+00','2024-07-18 11:00:00+00'),
+('ALT-0048','CUS-0010',NULL,'risk_breach','low','rule','BNB concentration 8.4% approaching moderate threshold','resolved',FALSE,'2024-06-10 09:00:00+00','2024-06-12 10:00:00+00','2024-06-12 10:00:00+00'),
+('ALT-0049','CUS-0014',NULL,'risk_breach','high','rule','SOL allocation 20.6% exceeds aggressive profile limit','open',FALSE,'2025-03-20 11:00:00+00',NULL,'2025-03-20 11:00:00+00'),
+('ALT-0050','CUS-0020',NULL,'risk_breach','critical','rule','Crypto 78.4% far exceeds aggressive limit — immediate action required','escalated',TRUE,'2025-02-28 09:00:00+00',NULL,'2025-02-28 09:00:00+00'),
+('ALT-0051','CUS-0023',NULL,'risk_breach','high','rule','BTC 65.0% of portfolio exceeds aggressive limit of 50%','review',TRUE,'2025-01-15 10:30:00+00',NULL,'2025-01-15 10:30:00+00'),
+('ALT-0052','CUS-0026',NULL,'risk_breach','medium','rule','Combined crypto 49.7% near aggressive limit of 50%','open',FALSE,'2025-04-05 09:00:00+00',NULL,'2025-04-05 09:00:00+00'),
+('ALT-0053','CUS-0029',NULL,'risk_breach','critical','rule','BTC 71.7% of portfolio — extreme concentration risk','escalated',TRUE,'2025-03-25 08:00:00+00',NULL,'2025-03-25 08:00:00+00'),
+('ALT-0054','CUS-0038',NULL,'risk_breach','medium','rule','SOL 44.1% exceeds aggressive limit — review needed','resolved',FALSE,'2024-10-20 10:00:00+00','2024-10-22 14:00:00+00','2024-10-22 14:00:00+00'),
+('ALT-0055','CUS-0041',NULL,'risk_breach','critical','rule','BTC 64.1% of portfolio — rebalance immediately','escalated',TRUE,'2025-04-10 09:00:00+00',NULL,'2025-04-10 09:00:00+00'),
+('ALT-0056','CUS-0044',NULL,'risk_breach','high','rule','Combined crypto 80.3% exceeds all risk profile limits','review',TRUE,'2025-02-10 11:00:00+00',NULL,'2025-02-10 11:00:00+00'),
+('ALT-0057','CUS-0050',NULL,'risk_breach','medium','rule','SOL holding down 7.5% — reassess position','open',FALSE,'2025-01-08 09:30:00+00',NULL,'2025-01-08 09:30:00+00'),
+-- === RAPID_TXN (8) — source: ml_model ===
+('ALT-0058','CUS-0003',NULL,'rapid_txn','medium','ml_model','3 transactions within 2-hour window on 2023-01-15','resolved',FALSE,'2024-05-15 10:00:00+00','2024-05-17 09:00:00+00','2024-05-17 09:00:00+00'),
+('ALT-0059','CUS-0011',NULL,'rapid_txn','high','ml_model','4 buy transactions in 90 minutes — velocity anomaly detected','review',TRUE,'2024-08-22 14:00:00+00',NULL,'2024-08-22 14:00:00+00'),
+('ALT-0060','CUS-0019',NULL,'rapid_txn','medium','ml_model','Rapid sequential buys across 3 tickers within 1 hour','open',FALSE,'2024-11-30 10:00:00+00',NULL,'2024-11-30 10:00:00+00'),
+('ALT-0061','CUS-0023',NULL,'rapid_txn','high','ml_model','5 transactions in 3-hour period — unusual for customer profile','open',TRUE,'2025-01-25 09:00:00+00',NULL,'2025-01-25 09:00:00+00'),
+('ALT-0062','CUS-0031',NULL,'rapid_txn','low','ml_model','2 buy transactions within 30 minutes — low risk','resolved',FALSE,'2024-09-10 11:00:00+00','2024-09-11 09:00:00+00','2024-09-11 09:00:00+00'),
+('ALT-0063','CUS-0037',NULL,'rapid_txn','medium','ml_model','3 purchases in 4-hour window — monitor for recurrence','open',FALSE,'2024-12-18 13:00:00+00',NULL,'2024-12-18 13:00:00+00'),
+('ALT-0064','CUS-0043',NULL,'rapid_txn','high','ml_model','Rapid alternating buy/sell pattern — potential wash trading','review',TRUE,'2025-02-20 10:00:00+00',NULL,'2025-02-20 10:00:00+00'),
+('ALT-0065','CUS-0047',NULL,'rapid_txn','medium','ml_model','4 buy orders within 2 hours following flagged transaction','open',FALSE,'2025-03-22 14:00:00+00',NULL,'2025-03-22 14:00:00+00'),
+-- === REBALANCE (8) — source: rule ===
+('ALT-0066','CUS-0001',NULL,'rebalance','low','rule','ETF allocation 15.4% below target 25% — consider rebalancing','resolved',FALSE,'2024-05-10 09:00:00+00','2024-05-14 10:00:00+00','2024-05-14 10:00:00+00'),
+('ALT-0067','CUS-0009',NULL,'rebalance','low','rule','ETF concentration 72.7% above moderate target — diversify','open',FALSE,'2024-07-22 10:00:00+00',NULL,'2024-07-22 10:00:00+00'),
+('ALT-0068','CUS-0015',NULL,'rebalance','medium','rule','Single stock SPY at 49.2% — concentration risk for conservative profile','review',FALSE,'2024-09-05 09:00:00+00',NULL,'2024-09-05 09:00:00+00'),
+('ALT-0069','CUS-0021',NULL,'rebalance','low','rule','ETF allocation drifted 18% from target allocation','resolved',FALSE,'2024-06-20 10:00:00+00','2024-06-25 11:00:00+00','2024-06-25 11:00:00+00'),
+('ALT-0070','CUS-0027',NULL,'rebalance','medium','rule','Portfolio drift detected: ETF at 75.7% vs target 60%','open',TRUE,'2024-11-14 09:30:00+00',NULL,'2024-11-14 09:30:00+00'),
+('ALT-0071','CUS-0033',NULL,'rebalance','low','rule','Cash balance 25.5% above optimal — deploy capital','resolved',FALSE,'2024-08-30 10:00:00+00','2024-09-02 09:00:00+00','2024-09-02 09:00:00+00'),
+('ALT-0072','CUS-0042',NULL,'rebalance','medium','rule','ETF over-weight by 12% relative to risk profile target','open',FALSE,'2025-01-12 09:00:00+00',NULL,'2025-01-12 09:00:00+00'),
+('ALT-0073','CUS-0048',NULL,'rebalance','low','rule','Annual rebalance due — portfolio drifted 8% from target','open',FALSE,'2025-04-01 09:00:00+00',NULL,'2025-04-01 09:00:00+00'),
+-- === ML_ANOMALY (7) — source: ml_model ===
+('ALT-0074','CUS-0005',NULL,'ml_anomaly','high','ml_model','Anomalous portfolio return pattern — 3σ deviation from peer group','review',TRUE,'2024-10-08 10:00:00+00',NULL,'2024-10-08 10:00:00+00'),
+('ALT-0075','CUS-0013',NULL,'ml_anomaly','medium','ml_model','Transaction behavior shift — 78% deviation from historical baseline','open',FALSE,'2024-12-10 09:00:00+00',NULL,'2024-12-10 09:00:00+00'),
+('ALT-0076','CUS-0017',NULL,'ml_anomaly','critical','ml_model','Portfolio pattern matches high-risk crypto concentration cluster','escalated',TRUE,'2025-02-05 08:00:00+00',NULL,'2025-02-05 08:00:00+00'),
+('ALT-0077','CUS-0025',NULL,'ml_anomaly','medium','ml_model','Unusual trade timing pattern detected across 30-day window','resolved',FALSE,'2024-07-25 10:00:00+00','2024-07-28 11:00:00+00','2024-07-28 11:00:00+00'),
+('ALT-0078','CUS-0035',NULL,'ml_anomaly','high','ml_model','BTC accumulation velocity 4.2x peer group average','open',TRUE,'2025-03-18 09:00:00+00',NULL,'2025-03-18 09:00:00+00'),
+('ALT-0079','CUS-0043',NULL,'ml_anomaly','low','ml_model','Minor behavioral drift — customer shifted from conservative to moderate','resolved',FALSE,'2024-09-15 10:00:00+00','2024-09-17 09:00:00+00','2024-09-17 09:00:00+00'),
+('ALT-0080','CUS-0049',NULL,'ml_anomaly','medium','ml_model','Predicted margin call probability 34% within 90 days','open',FALSE,'2025-04-15 09:00:00+00',NULL,'2025-04-15 09:00:00+00')
+ON CONFLICT DO NOTHING;
