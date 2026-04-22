@@ -32,45 +32,60 @@ _scheduler: AsyncIOScheduler = None
 
 
 def _download_prices() -> dict:
-    """Synchronous yfinance download — called via asyncio.to_thread."""
-    try:
-        import yfinance as yf
-        symbols = list(TICKER_MAP.keys())
-        data = yf.download(symbols, period="1d", interval="1m", progress=False, auto_adjust=True)
-        if data.empty:
-            logger.warning("yfinance returned empty data")
-            return {}
+    """Synchronous yfinance download — called via asyncio.to_thread.
+    Tries 1m intraday first (live prices); falls back to 1d daily close."""
+    import yfinance as yf
+    symbols = list(TICKER_MAP.keys())
 
-        result = {}
-        for yf_sym, db_ticker in TICKER_MAP.items():
-            try:
-                close_series = data["Close"][yf_sym].dropna()
-                if len(close_series) < 1:
-                    logger.warning(f"No close price for {yf_sym}")
-                    continue
+    # Try intraday 1m bars first for live prices
+    data = None
+    interval_used = None
+    for interval, period in [("1m", "1d"), ("1d", "2d")]:
+        try:
+            candidate = yf.download(symbols, period=period, interval=interval,
+                                     progress=False, auto_adjust=True)
+            if not candidate.empty:
+                data = candidate
+                interval_used = interval
+                break
+        except Exception as e:
+            logger.warning(f"yfinance {interval} download failed: {e}")
 
-                price = float(close_series.iloc[-1])
-
-                # Use day's first bar open as reference for intraday change %
-                open_price = price
-                change_pct = 0.0
-                try:
-                    open_series = data["Open"][yf_sym].dropna()
-                    if not open_series.empty:
-                        open_price = float(open_series.iloc[0])   # first bar = day open
-                        if open_price > 0:
-                            change_pct = round((price - open_price) / open_price * 100, 4)
-                except Exception:
-                    pass
-
-                result[db_ticker] = (price, open_price, change_pct)
-            except Exception as e:
-                logger.warning(f"Price parse error for {yf_sym}: {e}")
-
-        return result
-    except Exception as e:
-        logger.error(f"yfinance download failed: {e}")
+    if data is None or data.empty:
+        logger.warning("yfinance returned empty data on all intervals")
         return {}
+
+    logger.info(f"yfinance using interval={interval_used}")
+    result = {}
+    for yf_sym, db_ticker in TICKER_MAP.items():
+        try:
+            close_series = data["Close"][yf_sym].dropna()
+            if len(close_series) < 1:
+                logger.warning(f"No close price for {yf_sym}")
+                continue
+
+            price = float(close_series.iloc[-1])
+            open_price = price
+            change_pct = 0.0
+            try:
+                open_series = data["Open"][yf_sym].dropna()
+                if not open_series.empty:
+                    if interval_used == "1m":
+                        # intraday: compare current vs first bar of day
+                        open_price = float(open_series.iloc[0])
+                    else:
+                        # daily: compare today vs yesterday
+                        open_price = float(open_series.iloc[-1])
+                    if open_price > 0:
+                        change_pct = round((price - open_price) / open_price * 100, 4)
+            except Exception:
+                pass
+
+            result[db_ticker] = (price, open_price, change_pct)
+        except Exception as e:
+            logger.warning(f"Price parse error for {yf_sym}: {e}")
+
+    return result
 
 
 async def fetch_and_update_prices(pool) -> None:
