@@ -1,4 +1,6 @@
+import asyncio
 import logging
+import os
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -8,6 +10,85 @@ from db.connection import fetch_all, fetch_one
 logger = logging.getLogger("routers.portfolio")
 
 router = APIRouter()
+
+# Human-readable company/asset names for better NewsAPI queries
+_TICKER_NAMES = {
+    "AAPL": "Apple stock", "MSFT": "Microsoft stock", "NVDA": "NVIDIA stock",
+    "TSLA": "Tesla stock", "AMZN": "Amazon stock", "GOOGL": "Google Alphabet stock",
+    "META": "Meta Platforms stock", "VTSAX": "Vanguard total stock market",
+    "SPY": "S&P 500 ETF", "QQQ": "Nasdaq 100 ETF",
+    "BTC": "Bitcoin", "ETH": "Ethereum", "SOL": "Solana", "BNB": "Binance coin",
+}
+
+
+async def _newsapi_article(ticker: str) -> dict | None:
+    """Fetch the single most relevant recent article from NewsAPI.org."""
+    api_key = os.getenv("NEWS_API_KEY", "")
+    if not api_key:
+        return None
+    query = _TICKER_NAMES.get(ticker, ticker)
+    url = (
+        f"https://newsapi.org/v2/everything"
+        f"?q={query.replace(' ', '+')}"
+        f"&pageSize=3&sortBy=publishedAt&language=en"
+        f"&apiKey={api_key}"
+    )
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=8) as client:
+            r = await client.get(url)
+            if r.status_code != 200:
+                return None
+            articles = r.json().get("articles", [])
+            if not articles:
+                return None
+            a = articles[0]
+            return {
+                "ticker": ticker,
+                "title": a.get("title", ""),
+                "publisher": a.get("source", {}).get("name", ""),
+                "link": a.get("url", ""),
+                "summary": a.get("description") or "",
+                "published_at": a.get("publishedAt", ""),
+                "source": "newsapi",
+            }
+    except Exception as e:
+        logger.debug(f"NewsAPI failed for {ticker}: {e}")
+        return None
+
+
+async def _gemini_article(ticker: str) -> dict | None:
+    """Generate a realistic news summary via Gemini when NewsAPI is unavailable."""
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=os.getenv("GEMINI_API_KEY", ""))
+        model = genai.GenerativeModel("gemini-2.0-flash")
+        prompt = (
+            f"Give me the single most important news story about {_TICKER_NAMES.get(ticker, ticker)} "
+            f"right now. Reply with ONLY a JSON object with these keys: "
+            f"title, publisher, summary (one sentence), sentiment (bullish/bearish/neutral). "
+            f"No markdown, no extra text."
+        )
+        def _call():
+            return model.generate_content(prompt)
+        resp = await asyncio.to_thread(_call)
+        import json, re
+        raw = resp.text.strip()
+        raw = re.sub(r"^```json\s*|^```\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
+        data = json.loads(raw)
+        return {
+            "ticker": ticker,
+            "title": data.get("title", ""),
+            "publisher": data.get("publisher", "Gemini AI"),
+            "link": "",
+            "summary": data.get("summary", ""),
+            "sentiment": data.get("sentiment", "neutral"),
+            "published_at": "",
+            "source": "gemini",
+        }
+    except Exception as e:
+        logger.debug(f"Gemini news fallback failed for {ticker}: {e}")
+        return None
 
 
 def _check_scope(current_user: dict, customer_id: str) -> None:
@@ -32,32 +113,14 @@ async def get_holding_news(
     tickers = [r["ticker"] for r in holdings]
 
     news_items = []
-    try:
-        import yfinance as yf
-        seen = set()
-        for ticker in tickers[:6]:
-            try:
-                yf_sym = ticker + "-USD" if ticker in ("BTC", "ETH", "SOL", "BNB") else ticker
-                items = yf.Ticker(yf_sym).news or []
-                for item in items[:3]:
-                    uid = item.get("id") or item.get("link", "")
-                    if uid in seen:
-                        continue
-                    seen.add(uid)
-                    news_items.append({
-                        "ticker": ticker,
-                        "title": item.get("title", ""),
-                        "publisher": item.get("publisher", ""),
-                        "link": item.get("link", ""),
-                        "published_at": item.get("providerPublishTime", 0),
-                    })
-            except Exception:
-                pass
-        news_items.sort(key=lambda x: x["published_at"], reverse=True)
-    except Exception:
-        pass
+    for ticker in tickers[:8]:
+        article = await _newsapi_article(ticker)
+        if not article:
+            article = await _gemini_article(ticker)
+        if article:
+            news_items.append(article)
 
-    return {"news": news_items[:12], "tickers": tickers}
+    return {"news": news_items, "tickers": tickers}
 
 
 @router.get("/prices")
