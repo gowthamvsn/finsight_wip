@@ -216,6 +216,10 @@ export default function CustomerPortfolio() {
   const [predictions, setPredictions] = useState(null)
   const [predLoading, setPredLoading] = useState(false)
   const [showTxn, setShowTxn] = useState(false)
+  const [analysis, setAnalysis] = useState(null)
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [news, setNews] = useState([])
+  const [newsLoading, setNewsLoading] = useState(false)
 
   const customerId = user?.user_id
 
@@ -225,6 +229,27 @@ export default function CustomerPortfolio() {
       .then(data => { setPortfolio(data); setLoading(false) })
       .catch(e => { setError(e.message); setLoading(false) })
   }, [customerId, token, refreshTick])
+
+  useEffect(() => {
+    if (!customerId || !token) return
+    setNewsLoading(true)
+    apiFetch(`/api/portfolio/${customerId}/news`, {}, token)
+      .then(data => setNews(data.news || []))
+      .catch(() => setNews([]))
+      .finally(() => setNewsLoading(false))
+  }, [customerId, token])
+
+  async function loadAnalysis() {
+    setAnalysisLoading(true)
+    try {
+      const data = await apiFetch(`/api/agent/portfolio/${customerId}`, { method: 'POST' }, token)
+      setAnalysis(data.analysis || data.result || data.summary || JSON.stringify(data))
+    } catch (e) {
+      setAnalysis(`Error: ${e.message}`)
+    } finally {
+      setAnalysisLoading(false)
+    }
+  }
 
   async function loadPredictions() {
     setPredLoading(true)
@@ -327,31 +352,19 @@ export default function CustomerPortfolio() {
           ))}
         </div>
 
-        {/* P&L Breakdown + Recent Alerts */}
+        {/* P&L + Actions + News + Analysis — 2-column grid */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
           {/* P&L Breakdown */}
           <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
             <h2 className="font-semibold mb-4 text-gray-200">P&L Breakdown</h2>
             <div className="space-y-2 text-sm">
               {[
-                {
-                  label: 'Gross investment gains',
-                  value: (summary.unrealized_pl || 0) + (summary.realized_pl || 0),
-                },
-                {
-                  label: 'Loan interest paid YTD',
-                  value: -(summary.interest_paid_ytd || 0),
-                },
-                {
-                  label: 'Net P&L',
-                  value: summary.net_pl || 0,
-                  bold: true,
-                },
+                { label: 'Gross investment gains', value: (summary.unrealized_pl || 0) + (summary.realized_pl || 0) },
+                { label: 'Loan interest paid YTD', value: -(summary.interest_paid_ytd || 0) },
+                { label: 'Net P&L', value: summary.net_pl || 0, bold: true },
               ].map(row => (
-                <div
-                  key={row.label}
-                  className={`flex justify-between ${row.bold ? 'border-t border-gray-700 pt-2 font-semibold' : ''}`}
-                >
+                <div key={row.label} className={`flex justify-between ${row.bold ? 'border-t border-gray-700 pt-2 font-semibold' : ''}`}>
                   <span className="text-gray-400">{row.label}</span>
                   <span className={`font-mono ${row.value >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                     {row.value >= 0 ? '+' : ''}{fmtUSD(row.value)}
@@ -368,25 +381,94 @@ export default function CustomerPortfolio() {
             </div>
           </div>
 
-          {/* Recent Alerts */}
+          {/* Actions Needed */}
           <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-            <h2 className="font-semibold mb-4 text-gray-200">Recent Alerts</h2>
-            {(alerts || []).length === 0 ? (
-              <p className="text-gray-500 text-sm">No open alerts</p>
+            <h2 className="font-semibold mb-4 text-gray-200">Actions Needed</h2>
+            {(() => {
+              const actions = []
+              const now = Date.now()
+              ;(loans || []).forEach(l => {
+                if (!l.next_due_date) return
+                const due = new Date(l.next_due_date)
+                const daysLeft = Math.ceil((due - now) / 86400000)
+                if (l.status === 'overdue') {
+                  actions.push({ type: 'overdue', label: `${l.loan_type} EMI overdue`, sub: `$${fmt(l.emi_monthly)}/mo outstanding`, color: 'red' })
+                } else if (daysLeft <= 30) {
+                  actions.push({ type: 'due', label: `${l.loan_type} payment due`, sub: `$${fmt(l.emi_monthly)} due in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}`, color: daysLeft <= 7 ? 'amber' : 'blue' })
+                }
+              })
+              ;(alerts || []).filter(a => a.severity === 'critical' || a.severity === 'high').slice(0, 2).forEach(a => {
+                actions.push({ type: 'alert', label: a.alert_type?.replace(/_/g, ' '), sub: a.description, color: 'orange' })
+              })
+              if (actions.length === 0) return <p className="text-gray-500 text-sm">No immediate actions required</p>
+              return (
+                <div className="space-y-2">
+                  {actions.map((a, i) => (
+                    <div key={i} className={`flex items-start gap-3 p-2.5 rounded-lg bg-${a.color}-900/30 border border-${a.color}-800/50`}>
+                      <span className={`mt-0.5 w-2 h-2 rounded-full bg-${a.color}-400 flex-shrink-0`} />
+                      <div className="min-w-0">
+                        <p className={`text-sm font-medium text-${a.color}-300 capitalize`}>{a.label}</p>
+                        <p className="text-xs text-gray-400 line-clamp-2">{a.sub}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            })()}
+          </div>
+
+          {/* Market News */}
+          <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+            <h2 className="font-semibold mb-4 text-gray-200">Market News</h2>
+            {newsLoading ? (
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
+                <span className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin" />
+                Loading news…
+              </div>
+            ) : news.length === 0 ? (
+              <p className="text-gray-500 text-sm">No news available for your holdings</p>
             ) : (
-              <div className="space-y-2">
-                {alerts.slice(0, 5).map(a => (
-                  <div key={a.alert_id} className="flex items-start gap-2 text-sm">
-                    <SevBadge severity={a.severity} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-gray-300 text-xs line-clamp-2">{a.description}</p>
-                      <p className="text-gray-500 text-xs">{ago(a.detected_at)}</p>
+              <div className="space-y-3">
+                {news.slice(0, 5).map((n, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <span className="mt-1 text-xs font-bold text-blue-400 w-12 flex-shrink-0">{n.ticker}</span>
+                    <div className="min-w-0">
+                      {n.link ? (
+                        <a href={n.link} target="_blank" rel="noreferrer"
+                           className="text-xs text-gray-300 hover:text-white line-clamp-2 leading-relaxed">
+                          {n.title}
+                        </a>
+                      ) : (
+                        <p className="text-xs text-gray-300 line-clamp-2">{n.title}</p>
+                      )}
+                      <p className="text-xs text-gray-600 mt-0.5">{n.publisher} · {n.published_at ? new Date(n.published_at * 1000).toLocaleDateString() : ''}</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
+
+          {/* Portfolio Analysis */}
+          <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-gray-200">Portfolio Analysis</h2>
+              <button
+                onClick={loadAnalysis}
+                disabled={analysisLoading}
+                className="bg-blue-700 hover:bg-blue-600 disabled:bg-blue-900 text-white text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                {analysisLoading && <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                {analysis ? 'Refresh' : 'Run Analysis'}
+              </button>
+            </div>
+            {analysis ? (
+              <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{analysis}</p>
+            ) : (
+              <p className="text-gray-500 text-sm">{analysisLoading ? 'Analysing your portfolio…' : 'Click "Run Analysis" to get AI-powered insights on your portfolio.'}</p>
+            )}
+          </div>
+
         </div>
 
         {/* Holdings Table */}

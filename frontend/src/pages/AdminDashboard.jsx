@@ -76,6 +76,8 @@ export default function AdminDashboard() {
   const totalAUM = customers.reduce((s, c) => s + (c.portfolio_value || 0), 0)
   const totalAlerts = customers.reduce((s, c) => s + (c.open_alert_count || 0), 0)
   const highSevCount = liveAlerts.filter(a => a.severity === 'critical' || a.severity === 'high').length
+  const totalBuy30d = customers.reduce((s, c) => s + (c.buy_volume_30d || 0), 0)
+  const totalSell30d = customers.reduce((s, c) => s + (c.sell_volume_30d || 0), 0)
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
@@ -104,16 +106,18 @@ export default function AdminDashboard() {
       </nav>
 
       {/* Metric Cards */}
-      <div className="px-6 py-4 grid grid-cols-4 gap-4">
+      <div className="px-6 py-4 grid grid-cols-3 gap-4 sm:grid-cols-6">
         {[
           { label: 'Total Customers', value: customers.length, color: 'blue' },
           { label: 'Total AUM', value: `$${(totalAUM / 1e6).toFixed(2)}M`, color: 'emerald' },
           { label: 'Open Alerts', value: totalAlerts, color: 'amber' },
           { label: 'High Severity', value: highSevCount, color: 'red' },
+          { label: 'Buy Volume 30d', value: `$${(totalBuy30d / 1e6).toFixed(2)}M`, color: 'emerald' },
+          { label: 'Sell Volume 30d', value: `$${(totalSell30d / 1e6).toFixed(2)}M`, color: 'rose' },
         ].map(card => (
           <div key={card.label} className="bg-gray-900 rounded-xl p-4 border border-gray-800">
             <p className="text-xs text-gray-400 uppercase tracking-wide">{card.label}</p>
-            <p className={`text-2xl font-bold mt-1 text-${card.color}-400`}>{card.value}</p>
+            <p className={`text-xl font-bold mt-1 text-${card.color}-400`}>{card.value}</p>
           </div>
         ))}
       </div>
@@ -136,7 +140,7 @@ export default function AdminDashboard() {
               <table className="w-full text-sm">
                 <thead className="bg-gray-800 text-gray-400 text-xs uppercase">
                   <tr>
-                    {['#', 'Name', 'Risk', 'Tier', 'Portfolio', 'Net P&L', 'Crypto%', 'Alerts', ''].map(h => (
+                    {['#', 'Name', 'Risk', 'Tier', 'Portfolio', 'Net P&L', 'Crypto%', 'Buy 30d', 'Sell 30d', 'Txns', 'Alerts', ''].map(h => (
                       <th key={h} className="px-3 py-2 text-left font-medium">{h}</th>
                     ))}
                   </tr>
@@ -159,6 +163,15 @@ export default function AdminDashboard() {
                       </td>
                       <td className={`px-3 py-2 font-mono ${cryptoColor(c.crypto_pct || 0, c.risk_profile)}`}>
                         {(c.crypto_pct || 0).toFixed(1)}%
+                      </td>
+                      <td className="px-3 py-2 font-mono text-emerald-400 text-xs">
+                        {(c.buy_volume_30d || 0) > 0 ? `$${((c.buy_volume_30d || 0) / 1000).toFixed(0)}k` : '—'}
+                      </td>
+                      <td className="px-3 py-2 font-mono text-rose-400 text-xs">
+                        {(c.sell_volume_30d || 0) > 0 ? `$${((c.sell_volume_30d || 0) / 1000).toFixed(0)}k` : '—'}
+                      </td>
+                      <td className="px-3 py-2 text-gray-400 text-xs text-center">
+                        {c.txn_count_30d || 0}
                       </td>
                       <td className="px-3 py-2">
                         {(c.open_alert_count || 0) > 0 && (

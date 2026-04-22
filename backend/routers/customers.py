@@ -19,7 +19,16 @@ SELECT c.customer_id, c.first_name, c.last_name, c.email,
        cs.loan_outstanding,
        (SELECT COUNT(*) FROM alerts a
         WHERE a.customer_id = c.customer_id
-          AND a.status = 'open') AS open_alert_count
+          AND a.status = 'open') AS open_alert_count,
+       COALESCE((SELECT SUM(total_value) FROM transactions t
+        WHERE t.customer_id = c.customer_id AND t.txn_type = 'buy'
+          AND t.txn_timestamp >= NOW() - INTERVAL '30 days'), 0) AS buy_volume_30d,
+       COALESCE((SELECT SUM(total_value) FROM transactions t
+        WHERE t.customer_id = c.customer_id AND t.txn_type = 'sell'
+          AND t.txn_timestamp >= NOW() - INTERVAL '30 days'), 0) AS sell_volume_30d,
+       COALESCE((SELECT COUNT(*) FROM transactions t
+        WHERE t.customer_id = c.customer_id
+          AND t.txn_timestamp >= NOW() - INTERVAL '30 days'), 0) AS txn_count_30d
 FROM customers c
 LEFT JOIN customer_summary cs ON c.customer_id = cs.customer_id
 """

@@ -18,6 +18,48 @@ def _check_scope(current_user: dict, customer_id: str) -> None:
         )
 
 
+@router.get("/{customer_id}/news")
+async def get_holding_news(
+    customer_id: str,
+    current_user: dict = Depends(get_current_user),
+):
+    _check_scope(current_user, customer_id)
+
+    holdings = await fetch_all(
+        "SELECT DISTINCT ticker FROM portfolio_holdings WHERE customer_id=$1 AND asset_type != 'cash'",
+        customer_id,
+    )
+    tickers = [r["ticker"] for r in holdings]
+
+    news_items = []
+    try:
+        import yfinance as yf
+        seen = set()
+        for ticker in tickers[:6]:
+            try:
+                yf_sym = ticker + "-USD" if ticker in ("BTC", "ETH", "SOL", "BNB") else ticker
+                items = yf.Ticker(yf_sym).news or []
+                for item in items[:3]:
+                    uid = item.get("id") or item.get("link", "")
+                    if uid in seen:
+                        continue
+                    seen.add(uid)
+                    news_items.append({
+                        "ticker": ticker,
+                        "title": item.get("title", ""),
+                        "publisher": item.get("publisher", ""),
+                        "link": item.get("link", ""),
+                        "published_at": item.get("providerPublishTime", 0),
+                    })
+            except Exception:
+                pass
+        news_items.sort(key=lambda x: x["published_at"], reverse=True)
+    except Exception:
+        pass
+
+    return {"news": news_items[:12], "tickers": tickers}
+
+
 @router.get("/prices")
 async def get_market_prices(current_user: dict = Depends(get_current_user)):
     rows = await fetch_all("SELECT ticker, price_usd FROM market_prices ORDER BY ticker")
