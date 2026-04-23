@@ -10,7 +10,8 @@ export function useLivePrices() {
 
   useEffect(() => {
     function connect() {
-      const ws = new WebSocket(`ws://${window.location.host}/ws/dashboard`)
+      const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+      const ws = new WebSocket(`${proto}//${window.location.host}/ws/dashboard`)
       wsRef.current = ws
 
       ws.onopen = () => {
