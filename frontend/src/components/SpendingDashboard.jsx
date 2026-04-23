@@ -1,0 +1,378 @@
+import { useState, useEffect } from 'react'
+import { apiFetch } from '../api/client'
+import AgentStatusTicker from './AgentStatusTicker'
+
+// ── helpers ───────────────────────────────────────────────────────────────────
+
+function fmtUSD(n) {
+  if (n == null) return '—'
+  const abs = Math.abs(n)
+  const str = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  return (n < 0 ? '-' : '') + '$' + str
+}
+
+function fmtPct(n) {
+  return n == null ? '—' : `${n > 0 ? '+' : ''}${n}%`
+}
+
+const CAT_COLORS = {
+  groceries:      { bar: 'bg-green-500',   badge: 'bg-green-900 text-green-300'   },
+  dining:         { bar: 'bg-amber-500',   badge: 'bg-amber-900 text-amber-300'   },
+  transport:      { bar: 'bg-blue-500',    badge: 'bg-blue-900 text-blue-300'     },
+  utilities:      { bar: 'bg-gray-500',    badge: 'bg-gray-700 text-gray-300'     },
+  entertainment:  { bar: 'bg-purple-500',  badge: 'bg-purple-900 text-purple-300' },
+  healthcare:     { bar: 'bg-teal-500',    badge: 'bg-teal-900 text-teal-300'     },
+  shopping:       { bar: 'bg-orange-500',  badge: 'bg-orange-900 text-orange-300' },
+  travel:         { bar: 'bg-cyan-500',    badge: 'bg-cyan-900 text-cyan-300'     },
+  rent:           { bar: 'bg-red-500',     badge: 'bg-red-900 text-red-300'       },
+  insurance:      { bar: 'bg-rose-500',    badge: 'bg-rose-900 text-rose-300'     },
+  subscription:   { bar: 'bg-violet-500',  badge: 'bg-violet-900 text-violet-300' },
+  salary:         { bar: 'bg-emerald-500', badge: 'bg-emerald-900 text-emerald-300'},
+  interest_earned:{ bar: 'bg-lime-500',    badge: 'bg-lime-900 text-lime-300'     },
+  interest_paid:  { bar: 'bg-pink-500',    badge: 'bg-pink-900 text-pink-300'     },
+  investment:     { bar: 'bg-indigo-500',  badge: 'bg-indigo-900 text-indigo-300' },
+  other:          { bar: 'bg-gray-400',    badge: 'bg-gray-700 text-gray-400'     },
+}
+
+function catColor(cat, type) {
+  return (CAT_COLORS[cat] || CAT_COLORS.other)[type]
+}
+
+// ── sub-components ────────────────────────────────────────────────────────────
+
+function MetricCard({ label, value, sub, color }) {
+  return (
+    <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
+      <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{label}</p>
+      <p className={`text-xl font-bold ${color || 'text-white'}`}>{value}</p>
+      {sub && <p className="text-xs text-gray-500 mt-0.5">{sub}</p>}
+    </div>
+  )
+}
+
+function AccountCard({ acc }) {
+  const typeLabel = {
+    checking:    'Checking',
+    savings:     'Savings',
+    credit_card: 'Credit Card',
+    investment:  'Investment',
+    mortgage:    'Mortgage',
+  }
+  const isNeg = parseFloat(acc.balance) < 0
+  return (
+    <div className="bg-gray-900 rounded-xl p-4 border border-gray-800 flex flex-col gap-1">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          {acc.bank_name}
+        </span>
+        <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">
+          {typeLabel[acc.account_type] || acc.account_type}
+        </span>
+      </div>
+      <p className={`text-lg font-bold ${isNeg ? 'text-red-400' : 'text-white'}`}>
+        {fmtUSD(parseFloat(acc.balance))}
+      </p>
+      <p className="text-xs text-gray-500">Account {acc.account_number}</p>
+      {acc.interest_rate && (
+        <p className="text-xs text-gray-500">
+          Rate: <span className="text-gray-300">{acc.interest_rate}% APR</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
+function SpendingBar({ item, maxSpent }) {
+  const pct = maxSpent > 0 ? (item.total_spent / maxSpent) * 100 : 0
+  return (
+    <div className="flex items-center gap-3 py-1.5">
+      <span className="text-xs text-gray-400 w-28 shrink-0 capitalize">
+        {item.category.replace('_', ' ')}
+      </span>
+      <div className="flex-1 bg-gray-800 rounded-full h-2 overflow-hidden">
+        <div
+          className={`h-2 rounded-full ${catColor(item.category, 'bar')}`}
+          style={{ width: `${Math.min(pct, 100)}%` }}
+        />
+      </div>
+      <span className="text-xs text-gray-300 w-24 text-right shrink-0">
+        {fmtUSD(item.total_spent)}{' '}
+        <span className="text-gray-600">({item.pct_of_spending}%)</span>
+      </span>
+      {item.vs_last_month !== 0 && (
+        <span className={`text-xs w-14 text-right shrink-0 ${item.vs_last_month > 0 ? 'text-red-400' : 'text-green-400'}`}>
+          {fmtPct(item.vs_last_month)}
+        </span>
+      )}
+    </div>
+  )
+}
+
+function MonthlyTrendBars({ trend }) {
+  if (!trend || trend.length === 0) return null
+  const maxVal = Math.max(...trend.flatMap(t => [t.income, t.spending]))
+  return (
+    <div className="flex items-end gap-4 h-32">
+      {trend.map(t => (
+        <div key={t.period} className="flex-1 flex flex-col items-center gap-1">
+          <div className="w-full flex items-end gap-1 h-24">
+            <div className="flex-1 flex flex-col justify-end">
+              <div
+                className="w-full bg-emerald-600 rounded-t"
+                style={{ height: `${(t.income / maxVal) * 100}%` }}
+                title={`Income: ${fmtUSD(t.income)}`}
+              />
+            </div>
+            <div className="flex-1 flex flex-col justify-end">
+              <div
+                className="w-full bg-red-600 rounded-t"
+                style={{ height: `${(t.spending / maxVal) * 100}%` }}
+                title={`Spending: ${fmtUSD(t.spending)}`}
+              />
+            </div>
+          </div>
+          <span className="text-xs text-gray-500">{t.period}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── main component ────────────────────────────────────────────────────────────
+
+export default function SpendingDashboard({ customerId, token }) {
+  const [accounts, setAccounts]       = useState([])
+  const [summary, setSummary]         = useState(null)
+  const [txns, setTxns]               = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState('')
+  const [analyzing, setAnalyzing]     = useState(false)
+  const [analysisSteps, setAnalysisSteps] = useState([])
+  const [analysis, setAnalysis]       = useState('')
+  const [analysisError, setAnalysisError] = useState('')
+
+  useEffect(() => {
+    if (!customerId || !token) return
+    setLoading(true)
+    Promise.all([
+      apiFetch(`/api/banking/${customerId}/accounts`, {}, token),
+      apiFetch(`/api/banking/${customerId}/spending-summary`, {}, token),
+      apiFetch(`/api/banking/${customerId}/transactions?limit=20`, {}, token),
+    ])
+      .then(([accs, sum, ts]) => {
+        setAccounts(accs)
+        setSummary(sum)
+        setTxns(ts)
+      })
+      .catch(e => setError(e.message))
+      .finally(() => setLoading(false))
+  }, [customerId, token])
+
+  async function handleAnalyze() {
+    setAnalyzing(true)
+    setAnalysis('')
+    setAnalysisError('')
+    setAnalysisSteps([
+      { name: 'Spending Analyst', status: 'running', duration_ms: null },
+      { name: 'GPT-4o — analyzing 90 days of data', status: 'pending', duration_ms: null },
+    ])
+    const t0 = Date.now()
+    try {
+      setAnalysisSteps([
+        { name: 'Spending Analyst', status: 'complete', duration_ms: 10 },
+        { name: 'GPT-4o — analyzing 90 days of data', status: 'running', duration_ms: null },
+      ])
+      const result = await apiFetch(`/api/banking/${customerId}/analyze-spending`, { method: 'POST' }, token)
+      setAnalysisSteps([
+        { name: 'Spending Analyst', status: 'complete', duration_ms: 10 },
+        { name: 'GPT-4o — analyzing 90 days of data', status: 'complete', duration_ms: result.duration_ms || Date.now() - t0 },
+      ])
+      setAnalysis(result.analysis || '')
+      if (result.error) setAnalysisError(result.error)
+    } catch (e) {
+      setAnalysisSteps(s => s.map(st => ({ ...st, status: st.status === 'running' ? 'error' : st.status })))
+      setAnalysisError(e.message)
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
+  if (loading) return (
+    <div className="flex items-center justify-center py-20 text-gray-500">Loading banking data…</div>
+  )
+  if (error) return (
+    <div className="text-red-400 text-sm p-4">{error}</div>
+  )
+
+  const spendingCats = (summary?.by_category || []).filter(c => c.total_spent > 0)
+  const maxSpent = spendingCats.length > 0 ? Math.max(...spendingCats.map(c => c.total_spent)) : 1
+
+  const srColor = summary?.savings_rate >= 30
+    ? 'text-green-400'
+    : summary?.savings_rate >= 15 ? 'text-amber-400' : 'text-red-400'
+
+  return (
+    <div className="space-y-6">
+
+      {/* Simulated data disclaimer */}
+      <div className="bg-blue-950 border border-blue-800 rounded-lg px-4 py-3 text-xs text-blue-300 flex items-start gap-2">
+        <span className="mt-0.5">ℹ</span>
+        <span>
+          Bank transaction data is <strong>simulated</strong> for demonstration purposes.
+          Account balances, spending patterns, and transaction history are generated to reflect
+          realistic financial behavior. The LLM trend analysis and visualizations are real.
+        </span>
+      </div>
+
+      {/* SECTION 1 — Account Cards */}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Linked Accounts</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {accounts.map(acc => <AccountCard key={acc.account_id} acc={acc} />)}
+        </div>
+      </div>
+
+      {/* SECTION 2 — Monthly cashflow summary */}
+      {summary && (
+        <div>
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+            This Month — {summary.period}
+          </h3>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <MetricCard label="Monthly Income"   value={fmtUSD(summary.total_income)}   color="text-emerald-400" />
+            <MetricCard label="Monthly Spending" value={fmtUSD(summary.total_spending)} color="text-red-400" />
+            <MetricCard label="Net Cashflow"     value={fmtUSD(summary.net_cashflow)}
+              color={summary.net_cashflow >= 0 ? 'text-emerald-400' : 'text-red-400'} />
+            <MetricCard label="Savings Rate"     value={`${summary.savings_rate}%`}     color={srColor}
+              sub={summary.savings_rate >= 30 ? 'Excellent' : summary.savings_rate >= 15 ? 'Moderate' : 'Low — review spending'} />
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 3 — Spending by category */}
+      {spendingCats.length > 0 && (
+        <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+          <h3 className="text-sm font-semibold text-gray-300 mb-4">Spending by Category</h3>
+          <div className="space-y-0.5">
+            {spendingCats.map(item => (
+              <SpendingBar key={item.category} item={item} maxSpent={maxSpent} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 4 — 3-month trend */}
+      {summary?.monthly_trend?.length > 0 && (
+        <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+          <h3 className="text-sm font-semibold text-gray-300 mb-4">3-Month Cashflow Trend</h3>
+          <div className="flex gap-4 text-xs text-gray-500 mb-3">
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-600 inline-block"/>Income</span>
+            <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-600 inline-block"/>Spending</span>
+          </div>
+          <MonthlyTrendBars trend={summary.monthly_trend} />
+        </div>
+      )}
+
+      {/* SECTION 5 — Interest tracker */}
+      {summary && (
+        <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+          <h3 className="text-sm font-semibold text-gray-300 mb-4">Interest Tracker (last 3 months)</h3>
+          <div className="flex gap-6 flex-wrap">
+            <div>
+              <p className="text-xs text-gray-500 mb-1">Interest Earned</p>
+              <p className="text-xl font-bold text-green-400">{fmtUSD(summary.interest_earned_ytd)}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 mb-1">Interest Paid</p>
+              <p className="text-xl font-bold text-red-400">{fmtUSD(summary.interest_paid_ytd)}</p>
+            </div>
+            <div className="self-end pb-1">
+              {summary.interest_earned_ytd >= summary.interest_paid_ytd
+                ? <span className="text-xs text-green-400">✓ You are earning more interest than you are paying</span>
+                : <span className="text-xs text-amber-400">⚠ Consider paying down credit card debt to reduce interest paid</span>
+              }
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 6 — AI Spending Analysis */}
+      <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-gray-300">AI Spending Analysis</h3>
+          <button
+            onClick={handleAnalyze}
+            disabled={analyzing}
+            className="text-xs bg-blue-600 hover:bg-blue-700 disabled:bg-blue-900 disabled:cursor-not-allowed text-white px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+          >
+            {analyzing && <span className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"/>}
+            {analyzing ? 'Analyzing…' : 'Analyze My Spending Trends'}
+          </button>
+        </div>
+
+        {analysisSteps.length > 0 && <AgentStatusTicker steps={analysisSteps} />}
+
+        {analysis && (
+          <div className="mt-4 bg-gray-950 rounded-lg p-4 text-sm text-gray-300 leading-relaxed whitespace-pre-wrap border border-gray-800">
+            {analysis}
+          </div>
+        )}
+
+        {analysisError && !analysis && (
+          <p className="text-xs text-red-400 mt-2">{analysisError}</p>
+        )}
+
+        {!analysis && !analyzing && !analysisSteps.length && (
+          <p className="text-sm text-gray-600">
+            Click the button above to get a personalized GPT-4o analysis of your spending patterns,
+            savings opportunities, and interest optimization.
+          </p>
+        )}
+      </div>
+
+      {/* SECTION 7 — Recent bank transactions */}
+      <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+        <div className="px-5 py-3 border-b border-gray-800">
+          <h3 className="text-sm font-semibold text-gray-300">Recent Bank Transactions</h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-800 text-gray-400 text-xs uppercase">
+              <tr>
+                {['Date', 'Merchant', 'Category', 'Amount', 'Dir'].map(h => (
+                  <th key={h} className="px-4 py-2 text-left">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800">
+              {txns.map(t => (
+                <tr key={t.txn_id} className="hover:bg-gray-800/50 transition-colors">
+                  <td className="px-4 py-2 text-gray-500 text-xs whitespace-nowrap">
+                    {t.txn_date ? new Date(t.txn_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+                  </td>
+                  <td className="px-4 py-2 text-gray-300 max-w-[150px] truncate">
+                    {t.merchant || t.description}
+                  </td>
+                  <td className="px-4 py-2">
+                    <span className={`text-xs px-2 py-0.5 rounded capitalize ${catColor(t.category, 'badge')}`}>
+                      {t.category.replace('_', ' ')}
+                    </span>
+                  </td>
+                  <td className={`px-4 py-2 font-mono font-semibold ${t.txn_direction === 'credit' ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {t.txn_direction === 'credit' ? '+' : '-'}${parseFloat(t.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </td>
+                  <td className="px-4 py-2">
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${t.txn_direction === 'credit' ? 'bg-emerald-900 text-emerald-400' : 'bg-red-900 text-red-400'}`}>
+                      {t.txn_direction}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  )
+}

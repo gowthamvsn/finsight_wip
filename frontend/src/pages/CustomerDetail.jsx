@@ -6,6 +6,7 @@ import AgentStatusTicker from '../components/AgentStatusTicker'
 import AgentDebate from '../components/AgentDebate'
 import LivePriceBadge from '../components/LivePriceBadge'
 import { useLivePrices } from '../hooks/useLivePrices'
+import SpendingDashboard from '../components/SpendingDashboard'
 
 
 function fmt(n, decimals = 0) {
@@ -87,6 +88,7 @@ export default function CustomerDetail() {
   const [rawRF, setRawRF] = useState(null)
   const [debateResult, setDebateResult] = useState(null)
   const [debateLoading, setDebateLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState('portfolio')
 
   useEffect(() => {
     apiFetch(`/api/portfolio/${id}`, {}, token)
@@ -240,6 +242,32 @@ export default function CustomerDetail() {
             </button>
           </div>
         </div>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-1 border-b border-gray-800">
+          {[
+            { id: 'portfolio', label: 'Portfolio' },
+            { id: 'banking',   label: '🏦 Banking & Spending' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.id
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'banking' && (
+          <SpendingDashboard customerId={id} token={token} />
+        )}
+
+        {activeTab === 'portfolio' && <>
 
         {/* 4 Metric Cards */}
         <div className="grid grid-cols-4 gap-4">
@@ -585,6 +613,8 @@ export default function CustomerDetail() {
             )
           })}
         </div>
+
+        </> /* end portfolio tab */}
       </div>
     </div>
   )

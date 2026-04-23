@@ -27,6 +27,7 @@ from routers.alerts import router as alerts_router
 from routers.reports import router as reports_router
 from routers.websocket import router as websocket_router
 from routers.transactions import router as transactions_router
+from routers.banking import router as banking_router
 
 # WebSocket client lists — populated by Phase 3 routers
 connected_ws_clients: list = []
@@ -122,6 +123,7 @@ app.include_router(alerts_router,    prefix="/api/alerts",    tags=["alerts"])
 app.include_router(reports_router,   prefix="/api/reports",   tags=["reports"])
 app.include_router(websocket_router,                          tags=["websocket"])
 app.include_router(transactions_router, prefix="/api/transactions", tags=["transactions"])
+app.include_router(banking_router,      prefix="/api/banking",      tags=["banking"])
 
 
 @app.exception_handler(Exception)

@@ -6,6 +6,7 @@ import AgentDebate from '../components/AgentDebate'
 import LivePriceBadge from '../components/LivePriceBadge'
 import { useLivePrices } from '../hooks/useLivePrices'
 import TransactionModal from '../components/TransactionModal'
+import SpendingDashboard from '../components/SpendingDashboard'
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
@@ -217,6 +218,7 @@ export default function CustomerPortfolio() {
   const [predictions, setPredictions] = useState(null)
   const [predLoading, setPredLoading] = useState(false)
   const [showTxn, setShowTxn] = useState(false)
+  const [activeTab, setActiveTab] = useState('portfolio')
   const [analysis, setAnalysis] = useState(null)
   const [analysisLoading, setAnalysisLoading] = useState(false)
   const [news, setNews] = useState([])
@@ -352,6 +354,32 @@ export default function CustomerPortfolio() {
             + New Transaction
           </button>
         </div>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-1 border-b border-gray-800">
+          {[
+            { id: 'portfolio', label: 'Portfolio' },
+            { id: 'banking',   label: '🏦 Banking & Spending' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                activeTab === tab.id
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === 'banking' && (
+          <SpendingDashboard customerId={customerId} token={token} />
+        )}
+
+        {activeTab === 'portfolio' && <>
 
         {/* 4 Metric Cards */}
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -678,6 +706,8 @@ export default function CustomerPortfolio() {
 
         {/* Bottom padding so chat button doesn't cover content */}
         <div className="h-20" />
+
+        </> /* end portfolio tab */}
       </div>
 
       {/* Transaction Modal */}
