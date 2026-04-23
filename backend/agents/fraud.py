@@ -100,6 +100,114 @@ async def _insert_alert(
     return alert_id
 
 
+async def score_before_insert(
+    customer_id: str,
+    ticker: str,
+    txn_type: str,
+    total_value: float,
+    geo_country: str,
+    pool,
+) -> tuple[list[str], float]:
+    """
+    Score a transaction BEFORE it is inserted into the DB.
+    Returns (reasons, anomaly_score).
+    reasons is a non-empty list if OTP should be triggered.
+    Does NOT write to the DB.
+    """
+    reasons: list[str] = []
+    anomaly_score = 0.0
+    geo = geo_country.upper()
+    hour = datetime.now(timezone.utc).hour
+    t = ticker.upper()
+
+    # Rule checks (same thresholds as run_fraud_agent)
+    if total_value > 50000:
+        reasons.append(f"Large transaction: ${total_value:,.2f}")
+    if hour in list(range(23, 24)) + list(range(0, 6)) and t in CRYPTO_TICKERS:
+        reasons.append(f"Crypto trade at unusual hour ({hour:02d}:00 UTC)")
+    if geo in HIGH_RISK_COUNTRIES:
+        reasons.append(f"High-risk country: {geo}")
+
+    rapid = await fetch_one(
+        "SELECT COUNT(*) AS cnt FROM transactions WHERE customer_id=$1 AND txn_timestamp >= NOW() - INTERVAL '10 minutes'",
+        customer_id,
+    )
+    if rapid and rapid["cnt"] >= 3:
+        reasons.append(f"Rapid transactions: {rapid['cnt']} in the last 10 minutes")
+
+    customer = await fetch_one("SELECT risk_profile FROM customers WHERE customer_id=$1", customer_id)
+    risk_profile = customer["risk_profile"] if customer else "moderate"
+    if risk_profile == "conservative" and t in CRYPTO_TICKERS and txn_type == "buy" and total_value > 5000:
+        reasons.append(f"Conservative profile buying ${total_value:,.2f} in crypto ({t})")
+
+    overdue = await fetch_one("SELECT 1 FROM loans WHERE customer_id=$1 AND status='overdue' LIMIT 1", customer_id)
+    if overdue and txn_type == "buy" and total_value > 10000:
+        reasons.append(f"Overdue loan exists; buy order is ${total_value:,.2f}")
+
+    # Isolation Forest — fit on history, score the candidate transaction
+    history = await fetch_all(
+        """SELECT total_value, txn_timestamp, ticker, geo_country
+           FROM transactions
+           WHERE customer_id=$1 AND txn_timestamp >= NOW() - INTERVAL '90 days'
+           ORDER BY txn_timestamp DESC""",
+        customer_id,
+    )
+    if len(history) >= 10:
+        try:
+            from sklearn.ensemble import IsolationForest
+
+            countries = [r["geo_country"] for r in history if r["geo_country"]]
+            common_country = max(set(countries), key=countries.count) if countries else None
+
+            def _feats(rows):
+                out = []
+                for r in rows:
+                    rg = (r["geo_country"] or "").upper()
+                    out.append([
+                        float(r["total_value"]),
+                        float(r["txn_timestamp"].hour),
+                        1.0 if r["ticker"] in CRYPTO_TICKERS else 0.0,
+                        0.0 if (not common_country or rg == common_country) else 1.0,
+                        float(sum(
+                            1 for o in rows
+                            if abs((o["txn_timestamp"] - r["txn_timestamp"]).total_seconds()) <= 3600
+                        )),
+                    ])
+                return np.array(out)
+
+            hist_feat = _feats(list(history))
+            iso = IsolationForest(contamination=0.1, random_state=42)
+            iso.fit(hist_feat)
+
+            is_new_geo = 0.0 if (not common_country or geo == common_country) else 1.0
+            now_ts = datetime.now(timezone.utc)
+            hr_count = float(sum(
+                1 for r in history
+                if abs((r["txn_timestamp"] - now_ts).total_seconds()) <= 3600
+            ) + 1)
+            curr_feat = np.array([[
+                total_value,
+                float(hour),
+                1.0 if t in CRYPTO_TICKERS else 0.0,
+                is_new_geo,
+                hr_count,
+            ]])
+
+            scores = iso.decision_function(hist_feat)
+            mn, mx = scores.min(), scores.max()
+            raw = iso.decision_function(curr_feat)[0]
+            anomaly_score = float(max(0.0, min(1.0, 1.0 - (raw - mn) / (mx - mn) if mx > mn else 0.0)))
+
+            if anomaly_score > 0.7:
+                reasons.append(
+                    f"ML anomaly score {anomaly_score:.2f} — pattern deviates from your transaction history"
+                )
+        except Exception as e:
+            logger.warning(f"Isolation Forest (pre-insert) failed: {e}")
+
+    return reasons, anomaly_score
+
+
 async def run_fraud_agent(txn_id: str, customer_id: str, pool) -> dict:
     start = datetime.utcnow()
     alerts_created = 0

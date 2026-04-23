@@ -1,10 +1,12 @@
 import secrets, string
 from datetime import datetime, timedelta
 
-_store: dict = {}  # challenge_id -> {otp, txn_id, customer_id, ticker, txn_type, quantity, price, expires_at}
+_store: dict = {}  # challenge_id -> {otp, txn_id, customer_id, ticker, txn_type, quantity, price, geo_country, txn_category, expires_at}
 
 def create_otp(txn_id: str, customer_id: str, ttl_minutes: int = 5,
-               ticker: str = "", txn_type: str = "", quantity: float = 0, price: float = 0) -> tuple:
+               ticker: str = "", txn_type: str = "", quantity: float = 0,
+               price: float = 0, geo_country: str = "US",
+               txn_category: str = "equity_trade") -> tuple:
     """Returns (challenge_id, otp_string)"""
     challenge_id = secrets.token_urlsafe(16)
     otp = ''.join(secrets.choice(string.digits) for _ in range(6))
@@ -16,6 +18,8 @@ def create_otp(txn_id: str, customer_id: str, ttl_minutes: int = 5,
         "txn_type": txn_type,
         "quantity": quantity,
         "price": price,
+        "geo_country": geo_country,
+        "txn_category": txn_category,
         "expires_at": datetime.utcnow() + timedelta(minutes=ttl_minutes),
     }
     return challenge_id, otp

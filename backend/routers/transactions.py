@@ -94,34 +94,17 @@ class OTPConfirmRequest(BaseModel):
     challenge_id: str
     otp: str
 
-def _fraud_precheck(ticker: str, txn_type: str, total_value: float, geo_country: str) -> list:
-    """Fast rule-based check. Returns list of suspicious reasons (empty = clean)."""
-    reasons = []
-    t = ticker.upper()
-    hour = datetime.now(timezone.utc).hour
-
-    if total_value > 50000:
-        reasons.append(f"Large transaction: ${total_value:,.2f}")
-    if hour in range(0, 6) and t in CRYPTO_TICKERS:
-        reasons.append(f"Crypto trade at unusual hour ({hour:02d}:00 UTC)")
-    if geo_country.upper() in HIGH_RISK_COUNTRIES:
-        reasons.append(f"High-risk country: {geo_country.upper()}")
-
-    return reasons
-
 @router.post("")
 async def submit_transaction(
     body: TransactionRequest,
     current_user: dict = Depends(get_current_user),
 ):
-    # Authorization check
     if current_user["role"] == "customer" and current_user["sub"] != body.customer_id:
         raise HTTPException(status_code=403, detail="Cannot submit transaction for another customer")
 
     ticker = body.ticker.upper()
     total_value = round(body.quantity * body.price_per_unit, 2)
-    txn_category = "crypto" if ticker in CRYPTO_TICKERS else "stock"
-    txn_id = "TXN-" + uuid.uuid4().hex[:8].upper()
+    txn_category = "crypto" if ticker in CRYPTO_TICKERS else "equity_trade"
 
     # Validate sell: customer must hold enough
     if body.txn_type == "sell":
@@ -132,27 +115,23 @@ async def submit_transaction(
         if not holding or float(holding["quantity"]) < body.quantity:
             raise HTTPException(status_code=400, detail=f"Insufficient holdings: you don't hold {body.quantity} of {ticker}")
 
-    # Insert transaction (flagged=False initially)
-    await execute(
-        """
-        INSERT INTO transactions
-          (txn_id, customer_id, ticker, txn_type, txn_category,
-           quantity, price_at_txn, total_value, realized_pl,
-           flagged, txn_timestamp, ip_address, geo_country)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,0,FALSE,NOW(),'0.0.0.0',$9)
-        """,
-        txn_id, body.customer_id, ticker, body.txn_type, txn_category,
-        body.quantity, body.price_per_unit, total_value, body.geo_country,
+    # Score BEFORE inserting — rules + Isolation Forest
+    pool = get_pool()
+    from agents.fraud import score_before_insert
+    reasons, anomaly_score = await score_before_insert(
+        body.customer_id, ticker, body.txn_type, total_value, body.geo_country, pool
     )
 
-    # Fraud pre-check
-    reasons = _fraud_precheck(ticker, body.txn_type, total_value, body.geo_country)
+    txn_id = "TXN-" + uuid.uuid4().hex[:8].upper()
 
     if reasons:
-        # Generate OTP and send to customer email
-        challenge_id, otp = create_otp(txn_id, body.customer_id,
-                                        ticker=ticker, txn_type=body.txn_type,
-                                        quantity=body.quantity, price=body.price_per_unit)
+        # Transaction stays OUT of DB until OTP is confirmed
+        challenge_id, otp = create_otp(
+            txn_id, body.customer_id,
+            ticker=ticker, txn_type=body.txn_type,
+            quantity=body.quantity, price=body.price_per_unit,
+            geo_country=body.geo_country, txn_category=txn_category,
+        )
         customer = await fetch_one(
             "SELECT email, first_name, last_name FROM customers WHERE customer_id=$1",
             body.customer_id,
@@ -166,29 +145,35 @@ async def submit_transaction(
                 reasons,
             )
             if not sent:
-                # Email not configured — return OTP in response for demo
                 demo_otp = otp
 
-        logger.info(f"Transaction {txn_id} flagged — OTP challenge created: {challenge_id}")
+        logger.info(f"Transaction {txn_id} held for OTP — reasons: {reasons}")
         return {
             "status": "requires_otp",
             "txn_id": txn_id,
             "challenge_id": challenge_id,
             "reasons": reasons,
+            "anomaly_score": round(anomaly_score, 2),
             "total_value": total_value,
             "ticker": ticker,
             "txn_type": body.txn_type,
             "quantity": body.quantity,
             "message": "Suspicious activity detected. OTP sent to registered email.",
-            "demo_otp": demo_otp,   # None in production, visible if email not configured
+            "demo_otp": demo_otp,
         }
 
-    # Update holdings immediately for clean transactions
-    await _update_holdings(body.customer_id, ticker, body.txn_type, body.quantity, body.price_per_unit)
-
-    # Run fraud agent in background and return immediately
+    # Clean — insert now, update holdings, run full fraud agent in background
     import asyncio
-    pool = get_pool()
+    await execute(
+        """INSERT INTO transactions
+             (txn_id, customer_id, ticker, txn_type, txn_category,
+              quantity, price_at_txn, total_value, realized_pl,
+              flagged, txn_timestamp, ip_address, geo_country)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,0,FALSE,NOW(),'0.0.0.0',$9)""",
+        txn_id, body.customer_id, ticker, body.txn_type, txn_category,
+        body.quantity, body.price_per_unit, total_value, body.geo_country,
+    )
+    await _update_holdings(body.customer_id, ticker, body.txn_type, body.quantity, body.price_per_unit)
     asyncio.create_task(_run_fraud_check(txn_id, body.customer_id, pool))
 
     logger.info(f"Transaction {txn_id} approved — no suspicious signals")
@@ -215,21 +200,36 @@ async def confirm_otp(
             detail="Invalid or expired OTP. Please try again.",
         )
 
-    txn_id = entry["txn_id"]
+    txn_id      = entry["txn_id"]
     customer_id = entry["customer_id"]
+    ticker      = entry["ticker"]
+    txn_type    = entry["txn_type"]
+    quantity    = entry["quantity"]
+    price       = entry["price"]
+    geo_country = entry.get("geo_country", "US")
+    txn_category = entry.get("txn_category", "equity_trade")
+    total_value = round(quantity * price, 2)
 
-    # Update holdings now that OTP is verified
-    await _update_holdings(
-        customer_id, entry["ticker"], entry["txn_type"],
-        entry["quantity"], entry["price"],
+    # Insert transaction now that OTP is verified (flagged=TRUE — it was suspicious)
+    await execute(
+        """INSERT INTO transactions
+             (txn_id, customer_id, ticker, txn_type, txn_category,
+              quantity, price_at_txn, total_value, realized_pl,
+              flagged, txn_timestamp, ip_address, geo_country)
+           VALUES ($1,$2,$3,$4,$5,$6,$7,$8,0,TRUE,NOW(),'0.0.0.0',$9)""",
+        txn_id, customer_id, ticker, txn_type, txn_category,
+        quantity, price, total_value, geo_country,
     )
 
-    # Run full fraud agent in background
+    # Update holdings
+    await _update_holdings(customer_id, ticker, txn_type, quantity, price)
+
+    # Run fraud agent in background to create the alert record
     import asyncio
     pool = get_pool()
     asyncio.create_task(_run_fraud_check(txn_id, customer_id, pool))
 
-    logger.info(f"OTP confirmed for transaction {txn_id} — approved")
+    logger.info(f"OTP confirmed for {txn_id} — inserted flagged=TRUE, holdings updated")
     return {
         "status": "approved",
         "txn_id": txn_id,
