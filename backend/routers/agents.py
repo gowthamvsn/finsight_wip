@@ -119,6 +119,35 @@ async def report_endpoint(
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Wealth snapshot — portfolio + banking in parallel, ~50 words each (customer only)
+# ──────────────────────────────────────────────────────────────────────────────
+@router.post("/agent/wealth-snapshot/{customer_id}")
+async def wealth_snapshot_endpoint(
+    customer_id: str,
+    current_user: dict = Depends(get_customer_or_admin),
+):
+    caller_id = current_user.get("sub", current_user.get("user_id", ""))
+    if current_user.get("role") == "customer" and customer_id != caller_id:
+        raise HTTPException(status_code=403, detail="You can only request a snapshot for your own account")
+
+    pool = get_pool()
+    from agents.portfolio import run_portfolio_agent
+    from agents.spending_analyst import run_spending_analyst
+
+    portfolio_result, banking_result = await asyncio.gather(
+        run_portfolio_agent(customer_id, pool, snapshot=True),
+        run_spending_analyst(customer_id, pool, snapshot=True),
+    )
+
+    return {
+        "portfolio": portfolio_result.get("analysis", ""),
+        "banking":   banking_result.get("analysis", ""),
+        "portfolio_duration_ms": portfolio_result.get("duration_ms", 0),
+        "banking_duration_ms":   banking_result.get("duration_ms", 0),
+    }
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Support agent
 # ──────────────────────────────────────────────────────────────────────────────
 @router.post("/agent/support")

@@ -33,7 +33,7 @@ def _get_anthropic_client():
         return None
 
 
-async def run_portfolio_agent(customer_id: str, pool) -> dict:
+async def run_portfolio_agent(customer_id: str, pool, snapshot: bool = False) -> dict:
     start = datetime.utcnow()
     try:
         summary = await fetch_one(
@@ -94,24 +94,34 @@ async def run_portfolio_agent(customer_id: str, pool) -> dict:
             for l in loans
         ]) or "  No active loans"
 
-        context = f"""Customer: {summary['first_name']} {summary['last_name']} ({customer_id})
+        base_context = f"""Customer: {summary['first_name']} {summary['last_name']} ({customer_id})
 Risk Profile: {risk_profile} (crypto limit {crypto_limit}%) | Tier: {summary['advisor_tier']}
 
 PORTFOLIO: Value=${summary['portfolio_value']:,.2f} | Net Worth=${summary['net_worth']:,.2f} | Cash=${summary['cash_balance']:,.2f}
 P&L: Unrealized=${summary['unrealized_pl']:,.2f} | Realized=${summary['realized_pl']:,.2f} | Net=${summary['net_pl']:,.2f}
 Allocation: Stocks={summary['stock_pct']}% | Crypto={summary['crypto_pct']}% | ETFs={summary['etf_pct']}% | Cash={summary['cash_pct']}%
-Risk: {'BREACH — crypto {crypto_pct}% exceeds {crypto_limit}% limit' if risk_breached else 'Within limits'}
+Risk: {'BREACH — crypto ' + str(crypto_pct) + '% exceeds ' + str(crypto_limit) + '% limit' if risk_breached else 'Within limits'}
 
 HOLDINGS:
 {holdings_text}
 
 LOANS:
-{loans_text}
+{loans_text}"""
+
+        if snapshot:
+            context = base_context + """
+
+In 2-3 sentences (max 50 words), give a direct snapshot of portfolio and loan health.
+Mention any risk breach or overdue loan. End with one specific action."""
+            max_tokens = 120
+        else:
+            context = base_context + """
 
 Write exactly 3 sections, 2-3 sentences each. Complete every sentence. Total under 300 words.
 ## Performance Overview
 ## Allocation & Risk
 ## 3 Recommendations (bullet points)"""
+            max_tokens = 700
 
         client = _get_anthropic_client()
         if not client:
@@ -122,7 +132,7 @@ Write exactly 3 sections, 2-3 sentences each. Complete every sentence. Total und
 
         message = client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=700,
+            max_tokens=max_tokens,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": context}],
         )

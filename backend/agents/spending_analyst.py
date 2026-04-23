@@ -32,7 +32,7 @@ Tone: professional but conversational.
 Format: use clear sections with headers."""
 
 
-async def run_spending_analyst(customer_id: str, pool) -> dict:
+async def run_spending_analyst(customer_id: str, pool, snapshot: bool = False) -> dict:
     start = datetime.utcnow()
 
     try:
@@ -146,6 +146,17 @@ LARGE TRANSACTIONS THIS MONTH (>$500):
 {large_lines}
 """
 
+        if snapshot:
+            user_message = (
+                f"Spending data:\n{context}\n\n"
+                "In 2-3 sentences (max 50 words), give a direct snapshot of cash flow and spending health. "
+                "Mention savings rate and the biggest spending concern. End with one specific action."
+            )
+            max_tokens = 120
+        else:
+            user_message = f"Analyze this customer's spending:\n{context}"
+            max_tokens = 800
+
         from openai import AzureOpenAI
         client = AzureOpenAI(
             azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -156,9 +167,9 @@ LARGE TRANSACTIONS THIS MONTH (>$500):
             model=os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o"),
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user",   "content": f"Analyze this customer's spending:\n{context}"},
+                {"role": "user",   "content": user_message},
             ],
-            max_tokens=800,
+            max_tokens=max_tokens,
         )
         analysis = response.choices[0].message.content
         ms = int((datetime.utcnow() - start).total_seconds() * 1000)

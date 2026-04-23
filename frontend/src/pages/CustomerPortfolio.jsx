@@ -221,6 +221,8 @@ export default function CustomerPortfolio() {
   const [activeTab, setActiveTab] = useState('portfolio')
   const [analysis, setAnalysis] = useState(null)
   const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [snapshot, setSnapshot] = useState(null)
+  const [snapshotLoading, setSnapshotLoading] = useState(false)
   const [news, setNews] = useState([])
   const [newsLoading, setNewsLoading] = useState(false)
   const [debateResult, setDebateResult] = useState(null)
@@ -243,6 +245,18 @@ export default function CustomerPortfolio() {
       .catch(() => setNews([]))
       .finally(() => setNewsLoading(false))
   }, [customerId, token])
+
+  async function loadSnapshot() {
+    setSnapshotLoading(true)
+    try {
+      const data = await apiFetch(`/api/agent/wealth-snapshot/${customerId}`, { method: 'POST' }, token)
+      setSnapshot(data)
+    } catch (e) {
+      setSnapshot({ portfolio: `Error: ${e.message}`, banking: '' })
+    } finally {
+      setSnapshotLoading(false)
+    }
+  }
 
   async function loadAnalysis() {
     setAnalysisLoading(true)
@@ -353,6 +367,50 @@ export default function CustomerPortfolio() {
           >
             + New Transaction
           </button>
+        </div>
+
+        {/* Wealth Snapshot */}
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h2 className="font-semibold text-slate-800">Wealth Snapshot</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Portfolio + Banking · 2 agents in parallel</p>
+            </div>
+            <button
+              onClick={loadSnapshot}
+              disabled={snapshotLoading}
+              className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+            >
+              {snapshotLoading && <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+              {snapshot ? 'Refresh' : 'Get Wealth Snapshot'}
+            </button>
+          </div>
+
+          {snapshotLoading && !snapshot && (
+            <div className="px-5 py-6 flex items-center gap-3 text-slate-500 text-sm">
+              <span className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+              Running portfolio &amp; banking agents in parallel…
+            </div>
+          )}
+
+          {snapshot && (
+            <div className="divide-y divide-slate-100">
+              <div className="px-5 py-4 flex gap-3">
+                <span className="text-lg flex-shrink-0">📊</span>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Portfolio &amp; Loans</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">{snapshot.portfolio}</p>
+                </div>
+              </div>
+              <div className="px-5 py-4 flex gap-3">
+                <span className="text-lg flex-shrink-0">🏦</span>
+                <div>
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Banking &amp; Cash Flow</p>
+                  <p className="text-sm text-slate-700 leading-relaxed">{snapshot.banking}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Tab Navigation */}
