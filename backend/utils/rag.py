@@ -82,7 +82,7 @@ def detect_tickers(text: str) -> set[str]:
 
 async def retrieve_context(query: str, held_tickers: set[str], top_k: int = 4) -> list[dict]:
     mentioned = detect_tickers(query)
-    tickers   = list(mentioned & held_tickers & RAG_TICKERS)
+    tickers   = list(mentioned & RAG_TICKERS)
     if not tickers:
         return []
 
