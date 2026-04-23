@@ -104,7 +104,7 @@ function SupportChat({ customerId, token }) {
       }, token)
       setMessages(prev => [
         ...prev.slice(0, -1),
-        { role: 'assistant', text: data.response || 'No response received.' },
+        { role: 'assistant', text: data.response || 'No response received.', source: data.source || null },
       ])
     } catch (e) {
       setMessages(prev => [
@@ -163,7 +163,14 @@ function SupportChat({ customerId, token }) {
                       Analyzing…
                     </span>
                   ) : (
-                    msg.text
+                    <>
+                      {msg.text}
+                      {msg.source && (
+                        <div className="mt-1.5 pt-1.5 border-t border-slate-200 text-xs text-blue-600 flex items-center gap-1">
+                          <span className="font-medium">Source:</span> {msg.source}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

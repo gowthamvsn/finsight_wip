@@ -8,6 +8,7 @@ load_dotenv(find_dotenv(), override=True)
 
 from db.connection import fetch_one, fetch_all
 from utils.guardrails import sanitize_query
+from utils.rag import retrieve_context
 
 logger = logging.getLogger("agents.support")
 
@@ -26,12 +27,17 @@ You CANNOT:
 If asked about another customer:
 'I can only help with your own account.'
 
+When company filing excerpts are provided under COMPANY FILINGS,
+use them to answer questions about that company and end your
+response with exactly one line: "Source: <source name>" using
+the source value from the filing data.
+
 Be professional, helpful, and concise."""
 
 
 def _get_azure_client():
     endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-    api_key = os.getenv("AZURE_OPENAI_KEY")
+    api_key  = os.getenv("AZURE_OPENAI_KEY")
     if not endpoint or not api_key:
         return None
     try:
@@ -92,6 +98,12 @@ async def run_support_agent(query: str, customer_id: str, pool) -> dict:
             customer_id,
         )
 
+        holdings_rows = await fetch_all(
+            "SELECT DISTINCT ticker FROM portfolio_holdings WHERE customer_id = $1 AND ticker != 'CASH'",
+            customer_id,
+        )
+        held_tickers = {r["ticker"] for r in holdings_rows}
+
         if not summary:
             return {
                 "response": "Account data not found. Please contact support.",
@@ -140,6 +152,19 @@ ACTIVE LOANS:
 {loans_text}
 """
 
+        rag_chunks = await retrieve_context(clean_query, held_tickers)
+        rag_source = None
+
+        if rag_chunks:
+            filing_text = "\n\n".join(
+                f"[{c['ticker']}] {c['content']}" for c in rag_chunks
+            )
+            sources = list({c["source"] for c in rag_chunks})
+            rag_source = sources[0] if len(sources) == 1 else "; ".join(sources)
+            rag_section = f"\n\nCOMPANY FILINGS (source: {rag_source}):\n{filing_text}"
+        else:
+            rag_section = ""
+
         client = _get_azure_client()
         if not client:
             return {
@@ -154,17 +179,24 @@ ACTIVE LOANS:
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {
                     "role": "user",
-                    "content": f"Account data:\n{account_context}\n\nCustomer question: {clean_query}",
+                    "content": (
+                        f"Account data:\n{account_context}"
+                        f"{rag_section}"
+                        f"\n\nCustomer question: {clean_query}"
+                    ),
                 },
             ],
             max_tokens=600,
         )
 
         answer = response.choices[0].message.content
-        ms = int((datetime.utcnow() - start).total_seconds() * 1000)
-        logger.info(f"Support agent: customer={customer_id} duration={ms}ms")
+        ms     = int((datetime.utcnow() - start).total_seconds() * 1000)
+        logger.info(f"Support agent: customer={customer_id} rag={bool(rag_chunks)} duration={ms}ms")
 
-        return {"response": answer, "duration_ms": ms}
+        result = {"response": answer, "duration_ms": ms}
+        if rag_source:
+            result["source"] = rag_source
+        return result
 
     except Exception as e:
         logger.error(f"Support agent error: customer={customer_id} error={e}")
