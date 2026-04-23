@@ -334,7 +334,7 @@ export default function CustomerPortfolio() {
       <div className="px-6 py-6 max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="bg-white rounded-xl p-6 border border-slate-200 flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full bg-blue-700 flex items-center justify-center text-xl font-bold">
+          <div className="w-14 h-14 rounded-full bg-blue-700 flex items-center justify-center text-xl font-bold text-white">
             {initials}
           </div>
           <div className="flex-1">
@@ -366,7 +366,7 @@ export default function CustomerPortfolio() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-400'
+                  ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-slate-400 hover:text-slate-700'
               }`}
             >
@@ -391,7 +391,7 @@ export default function CustomerPortfolio() {
           ].map(card => (
             <div key={card.label} className="bg-white rounded-xl p-4 border border-slate-200">
               <p className="text-xs text-slate-500 uppercase tracking-wide">{card.label}</p>
-              <p className={`text-2xl font-bold mt-1 text-${card.color}-400 font-mono`}>{card.value}</p>
+              <p className={`text-2xl font-bold mt-1 text-${card.color}-600 font-mono`}>{card.value}</p>
             </div>
           ))}
         </div>
@@ -410,14 +410,14 @@ export default function CustomerPortfolio() {
               ].map(row => (
                 <div key={row.label} className={`flex justify-between ${row.bold ? 'border-t border-slate-200 pt-2 font-semibold' : ''}`}>
                   <span className="text-slate-500">{row.label}</span>
-                  <span className={`font-mono ${row.value >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <span className={`font-mono ${row.value >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                     {row.value >= 0 ? '+' : ''}{fmtUSD(row.value)}
                   </span>
                 </div>
               ))}
               <div className="flex justify-between border-t border-slate-200 pt-2 text-xs">
                 <span className="text-slate-500">vs S&P 500</span>
-                <span className={`font-mono ${(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? 'text-emerald-400' : 'text-red-400'}`}>
+                <span className={`font-mono ${(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? 'text-emerald-600' : 'text-red-600'}`}>
                   {(summary.annualized_return_pct || 0).toFixed(1)}% vs {(summary.sp500_return_pct || 0).toFixed(1)}%
                   {' '}{(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? '▲ Beating' : '▼ Lagging'}
                 </span>
@@ -448,10 +448,10 @@ export default function CustomerPortfolio() {
               return (
                 <div className="space-y-2">
                   {actions.map((a, i) => (
-                    <div key={i} className={`flex items-start gap-3 p-2.5 rounded-lg bg-${a.color}-900/30 border border-${a.color}-800/50`}>
-                      <span className={`mt-0.5 w-2 h-2 rounded-full bg-${a.color}-400 flex-shrink-0`} />
+                    <div key={i} className={`flex items-start gap-3 p-2.5 rounded-lg bg-${a.color}-50 border border-${a.color}-200`}>
+                      <span className={`mt-0.5 w-2 h-2 rounded-full bg-${a.color}-500 flex-shrink-0`} />
                       <div className="min-w-0">
-                        <p className={`text-sm font-medium text-${a.color}-300 capitalize`}>{a.label}</p>
+                        <p className={`text-sm font-medium text-${a.color}-700 capitalize`}>{a.label}</p>
                         <p className="text-xs text-slate-500 line-clamp-2">{a.sub}</p>
                       </div>
                     </div>
@@ -475,11 +475,11 @@ export default function CustomerPortfolio() {
               <div className="space-y-3">
                 {news.slice(0, 5).map((n, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <span className="mt-1 text-xs font-bold text-blue-400 w-12 flex-shrink-0">{n.ticker}</span>
+                    <span className="mt-1 text-xs font-bold text-blue-600 w-12 flex-shrink-0">{n.ticker}</span>
                     <div className="min-w-0">
                       {n.link ? (
                         <a href={n.link} target="_blank" rel="noreferrer"
-                           className="text-xs text-slate-700 hover:text-white line-clamp-2 leading-relaxed">
+                           className="text-xs text-slate-700 hover:text-blue-700 line-clamp-2 leading-relaxed">
                           {n.title}
                         </a>
                       ) : (
@@ -532,7 +532,7 @@ export default function CustomerPortfolio() {
               <tbody className="divide-y divide-slate-100">
                 {(holdings || []).filter(h => h.asset_type !== 'cash').map(h => (
                   <tr key={h.ticker} className="hover:bg-slate-100/40">
-                    <td className="px-4 py-2 font-bold text-blue-400">{h.ticker}</td>
+                    <td className="px-4 py-2 font-bold text-blue-600">{h.ticker}</td>
                     <td className="px-4 py-2 text-slate-500 capitalize text-xs">{h.asset_type}</td>
                     <td className="px-4 py-2 font-mono text-slate-700">{h.quantity}</td>
                     <td className="px-4 py-2 font-mono text-slate-500">${fmt(h.avg_buy_price, 2)}</td>
@@ -540,7 +540,7 @@ export default function CustomerPortfolio() {
                       <LivePriceBadge price={h.current_price} change1d={h.change_1d_pct} />
                     </td>
                     <td className="px-4 py-2 font-mono text-slate-800">${fmt(h.current_value)}</td>
-                    <td className={`px-4 py-2 font-mono ${(h.unrealized_pl_pct || 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <td className={`px-4 py-2 font-mono ${(h.unrealized_pl_pct || 0) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                       {(h.unrealized_pl_pct || 0) >= 0 ? '+' : ''}{fmt(h.unrealized_pl_pct, 2)}%
                     </td>
                   </tr>
@@ -586,7 +586,7 @@ export default function CustomerPortfolio() {
             <div className="p-4 space-y-3">
               {(predictions.portfolio_predictions || []).map(p => (
                 <div key={p.ticker} className="flex items-center gap-3">
-                  <span className="w-16 font-bold text-blue-400 text-sm">{p.ticker}</span>
+                  <span className="w-16 font-bold text-blue-600 text-sm">{p.ticker}</span>
                   <div className="flex-1 bg-slate-100 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full transition-all"
@@ -638,18 +638,18 @@ export default function CustomerPortfolio() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {loans.map((l, i) => (
-                    <tr key={i} className={l.status === 'overdue' ? 'bg-red-900/20' : ''}>
+                    <tr key={i} className={l.status === 'overdue' ? 'bg-red-50' : ''}>
                       <td className="px-4 py-2 capitalize text-slate-700">{l.loan_type}</td>
                       <td className="px-4 py-2 font-mono text-slate-800">${fmt(l.outstanding_balance)}</td>
-                      <td className="px-4 py-2 font-mono text-amber-400">{l.interest_rate_pct}%</td>
+                      <td className="px-4 py-2 font-mono text-amber-600">{l.interest_rate_pct}%</td>
                       <td className="px-4 py-2 font-mono text-slate-700">${fmt(l.emi_monthly)}</td>
                       <td className="px-4 py-2 text-slate-500 text-xs">
                         {l.next_due_date?.split('T')[0] || '—'}
                       </td>
                       <td className="px-4 py-2">
                         <span className={`px-2 py-0.5 rounded text-xs ${
-                          l.status === 'overdue' ? 'bg-red-800 text-red-200' :
-                          l.status === 'active'  ? 'bg-green-900 text-green-300' :
+                          l.status === 'overdue' ? 'bg-red-100 text-red-700' :
+                          l.status === 'active'  ? 'bg-green-100 text-green-700' :
                                                    'bg-slate-100 text-slate-600'
                         }`}>
                           {l.status}
@@ -680,9 +680,9 @@ export default function CustomerPortfolio() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {transactions.slice(0, 10).map((t, i) => (
-                    <tr key={i} className={t.flagged ? 'bg-red-900/10' : ''}>
+                    <tr key={i} className={t.flagged ? 'bg-red-50' : ''}>
                       <td className="px-4 py-2 font-bold text-blue-400">{t.ticker}</td>
-                      <td className={`px-4 py-2 font-medium ${t.txn_type === 'buy' ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <td className={`px-4 py-2 font-medium ${t.txn_type === 'buy' ? 'text-emerald-600' : 'text-red-600'}`}>
                         {t.txn_type?.toUpperCase()}
                       </td>
                       <td className="px-4 py-2 font-mono text-slate-700">{t.quantity}</td>
@@ -693,7 +693,7 @@ export default function CustomerPortfolio() {
                       </td>
                       <td className="px-4 py-2">
                         {t.flagged && (
-                          <span className="bg-red-800 text-red-200 text-xs px-1.5 py-0.5 rounded">⚑</span>
+                          <span className="bg-red-100 text-red-700 text-xs px-1.5 py-0.5 rounded">⚑</span>
                         )}
                       </td>
                     </tr>

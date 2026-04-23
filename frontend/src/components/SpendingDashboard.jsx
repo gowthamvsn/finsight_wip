@@ -44,7 +44,7 @@ function MetricCard({ label, value, sub, color }) {
   return (
     <div className="bg-white rounded-xl p-4 border border-slate-200">
       <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">{label}</p>
-      <p className={`text-xl font-bold ${color || 'text-white'}`}>{value}</p>
+      <p className={`text-xl font-bold ${color || 'text-slate-800'}`}>{value}</p>
       {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
     </div>
   )
@@ -69,7 +69,7 @@ function AccountCard({ acc }) {
           {typeLabel[acc.account_type] || acc.account_type}
         </span>
       </div>
-      <p className={`text-lg font-bold ${isNeg ? 'text-red-400' : 'text-white'}`}>
+      <p className={`text-lg font-bold ${isNeg ? 'text-red-600' : 'text-slate-800'}`}>
         {fmtUSD(parseFloat(acc.balance))}
       </p>
       <p className="text-xs text-slate-400">Account {acc.account_number}</p>
@@ -100,7 +100,7 @@ function SpendingBar({ item, maxSpent }) {
         <span className="text-slate-400">({item.pct_of_spending}%)</span>
       </span>
       {item.vs_last_month !== 0 && (
-        <span className={`text-xs w-14 text-right shrink-0 ${item.vs_last_month > 0 ? 'text-red-400' : 'text-green-400'}`}>
+        <span className={`text-xs w-14 text-right shrink-0 ${item.vs_last_month > 0 ? 'text-red-600' : 'text-green-600'}`}>
           {fmtPct(item.vs_last_month)}
         </span>
       )}
@@ -203,15 +203,15 @@ export default function SpendingDashboard({ customerId, token }) {
     <div className="flex items-center justify-center py-20 text-slate-400">Loading banking data…</div>
   )
   if (error) return (
-    <div className="text-red-400 text-sm p-4">{error}</div>
+    <div className="text-red-600 text-sm p-4">{error}</div>
   )
 
   const spendingCats = (summary?.by_category || []).filter(c => c.total_spent > 0)
   const maxSpent = spendingCats.length > 0 ? Math.max(...spendingCats.map(c => c.total_spent)) : 1
 
   const srColor = summary?.savings_rate >= 30
-    ? 'text-green-400'
-    : summary?.savings_rate >= 15 ? 'text-amber-400' : 'text-red-400'
+    ? 'text-green-700'
+    : summary?.savings_rate >= 15 ? 'text-amber-600' : 'text-red-600'
 
   return (
     <div className="space-y-6">
@@ -241,10 +241,10 @@ export default function SpendingDashboard({ customerId, token }) {
             This Month — {summary.period}
           </h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <MetricCard label="Monthly Income"   value={fmtUSD(summary.total_income)}   color="text-emerald-400" />
-            <MetricCard label="Monthly Spending" value={fmtUSD(summary.total_spending)} color="text-red-400" />
+            <MetricCard label="Monthly Income"   value={fmtUSD(summary.total_income)}   color="text-emerald-700" />
+            <MetricCard label="Monthly Spending" value={fmtUSD(summary.total_spending)} color="text-red-600" />
             <MetricCard label="Net Cashflow"     value={fmtUSD(summary.net_cashflow)}
-              color={summary.net_cashflow >= 0 ? 'text-emerald-400' : 'text-red-400'} />
+              color={summary.net_cashflow >= 0 ? 'text-emerald-700' : 'text-red-600'} />
             <MetricCard label="Savings Rate"     value={`${summary.savings_rate}%`}     color={srColor}
               sub={summary.savings_rate >= 30 ? 'Excellent' : summary.savings_rate >= 15 ? 'Moderate' : 'Low — review spending'} />
           </div>
@@ -282,16 +282,16 @@ export default function SpendingDashboard({ customerId, token }) {
           <div className="flex gap-6 flex-wrap">
             <div>
               <p className="text-xs text-slate-400 mb-1">Interest Earned</p>
-              <p className="text-xl font-bold text-green-400">{fmtUSD(summary.interest_earned_ytd)}</p>
+              <p className="text-xl font-bold text-green-700">{fmtUSD(summary.interest_earned_ytd)}</p>
             </div>
             <div>
               <p className="text-xs text-slate-400 mb-1">Interest Paid</p>
-              <p className="text-xl font-bold text-red-400">{fmtUSD(summary.interest_paid_ytd)}</p>
+              <p className="text-xl font-bold text-red-600">{fmtUSD(summary.interest_paid_ytd)}</p>
             </div>
             <div className="self-end pb-1">
               {summary.interest_earned_ytd >= summary.interest_paid_ytd
-                ? <span className="text-xs text-green-400">✓ You are earning more interest than you are paying</span>
-                : <span className="text-xs text-amber-400">⚠ Consider paying down credit card debt to reduce interest paid</span>
+                ? <span className="text-xs text-green-700">✓ You are earning more interest than you are paying</span>
+                : <span className="text-xs text-amber-700">⚠ Consider paying down credit card debt to reduce interest paid</span>
               }
             </div>
           </div>
@@ -321,7 +321,7 @@ export default function SpendingDashboard({ customerId, token }) {
         )}
 
         {analysisError && !analysis && (
-          <p className="text-xs text-red-400 mt-2">{analysisError}</p>
+          <p className="text-xs text-red-600 mt-2">{analysisError}</p>
         )}
 
         {!analysis && !analyzing && !analysisSteps.length && (
@@ -346,7 +346,7 @@ export default function SpendingDashboard({ customerId, token }) {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-slate-100">
               {txns.map(t => (
                 <tr key={t.txn_id} className="hover:bg-slate-100/50 transition-colors">
                   <td className="px-4 py-2 text-slate-400 text-xs whitespace-nowrap">
@@ -360,11 +360,11 @@ export default function SpendingDashboard({ customerId, token }) {
                       {t.category.replace('_', ' ')}
                     </span>
                   </td>
-                  <td className={`px-4 py-2 font-mono font-semibold ${t.txn_direction === 'credit' ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <td className={`px-4 py-2 font-mono font-semibold ${t.txn_direction === 'credit' ? 'text-emerald-700' : 'text-red-600'}`}>
                     {t.txn_direction === 'credit' ? '+' : '-'}${parseFloat(t.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </td>
                   <td className="px-4 py-2">
-                    <span className={`text-xs px-1.5 py-0.5 rounded ${t.txn_direction === 'credit' ? 'bg-emerald-900 text-emerald-400' : 'bg-red-900 text-red-400'}`}>
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${t.txn_direction === 'credit' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'}`}>
                       {t.txn_direction}
                     </span>
                   </td>

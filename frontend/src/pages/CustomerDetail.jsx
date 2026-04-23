@@ -58,7 +58,7 @@ function SevBadge({ severity }) {
     critical: 'bg-red-100 text-red-700',
     high: 'bg-orange-100 text-orange-700',
     medium: 'bg-yellow-100 text-yellow-700',
-    low: 'bg-blue-900 text-blue-300',
+    low: 'bg-blue-100 text-blue-700',
   }
   return (
     <span className={`px-2 py-0.5 rounded text-xs ${colors[severity] || 'bg-slate-100 text-slate-600'}`}>
@@ -194,7 +194,7 @@ export default function CustomerDetail() {
     </div>
   )
   if (error) return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center text-red-400">{error}</div>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center text-red-600">{error}</div>
   )
   if (!portfolio) return null
 
@@ -219,7 +219,7 @@ export default function CustomerDetail() {
         {/* Header */}
         <div className="bg-white rounded-xl p-6 border border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-blue-700 flex items-center justify-center text-xl font-bold">
+            <div className="w-14 h-14 rounded-full bg-blue-700 flex items-center justify-center text-xl font-bold text-white">
               {initials}
             </div>
             <div>
@@ -254,7 +254,7 @@ export default function CustomerDetail() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-400'
+                  ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-slate-400 hover:text-slate-700'
               }`}
             >
@@ -279,7 +279,7 @@ export default function CustomerDetail() {
           ].map(card => (
             <div key={card.label} className="bg-white rounded-xl p-4 border border-slate-200">
               <p className="text-xs text-slate-500 uppercase tracking-wide">{card.label}</p>
-              <p className={`text-2xl font-bold mt-1 text-${card.color}-400 font-mono`}>{card.value}</p>
+              <p className={`text-2xl font-bold mt-1 text-${card.color}-600 font-mono`}>{card.value}</p>
             </div>
           ))}
         </div>
@@ -310,14 +310,14 @@ export default function CustomerDetail() {
                   className={`flex justify-between ${row.bold ? 'border-t border-slate-200 pt-2 font-semibold' : ''}`}
                 >
                   <span className="text-slate-500">{row.label}</span>
-                  <span className={`font-mono ${row.value >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <span className={`font-mono ${row.value >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                     {row.value >= 0 ? '+' : ''}{fmtUSD(row.value)}
                   </span>
                 </div>
               ))}
               <div className="flex justify-between border-t border-slate-200 pt-2 text-xs">
                 <span className="text-slate-500">vs S&P 500</span>
-                <span className={`font-mono ${(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? 'text-emerald-400' : 'text-red-400'}`}>
+                <span className={`font-mono ${(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? 'text-emerald-600' : 'text-red-600'}`}>
                   {(summary.annualized_return_pct || 0).toFixed(1)}% vs {(summary.sp500_return_pct || 0).toFixed(1)}%
                   {' '}{(summary.annualized_return_pct || 0) > (summary.sp500_return_pct || 0) ? '▲ Beating' : '▼ Lagging'}
                 </span>
@@ -363,7 +363,7 @@ export default function CustomerDetail() {
               <tbody className="divide-y divide-slate-100">
                 {(holdings || []).filter(h => h.asset_type !== 'cash').map(h => (
                   <tr key={h.ticker} className="hover:bg-slate-100/40">
-                    <td className="px-4 py-2 font-bold text-blue-400">{h.ticker}</td>
+                    <td className="px-4 py-2 font-bold text-blue-600">{h.ticker}</td>
                     <td className="px-4 py-2 text-slate-500 capitalize text-xs">{h.asset_type}</td>
                     <td className="px-4 py-2 font-mono text-slate-700">{h.quantity}</td>
                     <td className="px-4 py-2 font-mono text-slate-500">${fmt(h.avg_buy_price, 2)}</td>
@@ -371,7 +371,7 @@ export default function CustomerDetail() {
                       <LivePriceBadge price={h.current_price} change1d={h.change_1d_pct} />
                     </td>
                     <td className="px-4 py-2 font-mono text-slate-800">${fmt(h.current_value)}</td>
-                    <td className={`px-4 py-2 font-mono ${(h.unrealized_pl_pct || 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <td className={`px-4 py-2 font-mono ${(h.unrealized_pl_pct || 0) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                       {(h.unrealized_pl_pct || 0) >= 0 ? '+' : ''}{fmt(h.unrealized_pl_pct, 2)}%
                     </td>
                   </tr>
@@ -403,7 +403,7 @@ export default function CustomerDetail() {
             <div className="p-4 space-y-3">
               {(predictions.portfolio_predictions || []).map(p => (
                 <div key={p.ticker} className="flex items-center gap-3">
-                  <span className="w-16 font-bold text-blue-400 text-sm">{p.ticker}</span>
+                  <span className="w-16 font-bold text-blue-600 text-sm">{p.ticker}</span>
                   <div className="flex-1 bg-slate-100 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full transition-all"
@@ -460,14 +460,14 @@ export default function CustomerDetail() {
                         <tbody className="divide-y divide-slate-100">
                           {rawRF.map(r => (
                             <tr key={r.ticker} className="hover:bg-slate-100/40">
-                              <td className="py-1 pr-3 text-blue-400 font-bold">{r.ticker}</td>
-                              <td className="py-1 pr-3 text-red-400">{r.raw_prob.toFixed(4)}</td>
-                              <td className={`py-1 pr-3 ${r.cal_prob > 0.75 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                              <td className="py-1 pr-3 text-blue-600 font-bold">{r.ticker}</td>
+                              <td className="py-1 pr-3 text-red-600">{r.raw_prob.toFixed(4)}</td>
+                              <td className={`py-1 pr-3 ${r.cal_prob > 0.75 ? 'text-amber-600' : 'text-emerald-600'}`}>
                                 {r.cal_prob?.toFixed(4) ?? '—'}
                               </td>
                               <td className="py-1 pr-3 text-slate-500">{r.flags_fired}/14</td>
                               {Object.values(r.flags).map((v, i) => (
-                                <td key={i} className={`py-1 pr-1 ${v ? 'text-emerald-400' : 'text-gray-700'}`}>{v}</td>
+                                <td key={i} className={`py-1 pr-1 ${v ? 'text-emerald-600' : 'text-slate-500'}`}>{v}</td>
                               ))}
                             </tr>
                           ))}
@@ -509,7 +509,7 @@ export default function CustomerDetail() {
                     <tr key={i} className={l.status === 'overdue' ? 'bg-red-50' : ''}>
                       <td className="px-4 py-2 capitalize text-slate-700">{l.loan_type}</td>
                       <td className="px-4 py-2 font-mono text-slate-800">${fmt(l.outstanding_balance)}</td>
-                      <td className="px-4 py-2 font-mono text-amber-400">{l.interest_rate_pct}%</td>
+                      <td className="px-4 py-2 font-mono text-amber-600">{l.interest_rate_pct}%</td>
                       <td className="px-4 py-2 font-mono text-slate-700">${fmt(l.emi_monthly)}</td>
                       <td className="px-4 py-2 text-slate-500 text-xs">
                         {l.next_due_date?.split('T')[0] || '—'}
@@ -549,8 +549,8 @@ export default function CustomerDetail() {
                 <tbody className="divide-y divide-slate-100">
                   {transactions.slice(0, 10).map((t, i) => (
                     <tr key={i} className={t.flagged ? 'bg-red-50' : ''}>
-                      <td className="px-4 py-2 font-bold text-blue-400">{t.ticker}</td>
-                      <td className={`px-4 py-2 font-medium ${t.txn_type === 'buy' ? 'text-emerald-400' : 'text-red-400'}`}>
+                      <td className="px-4 py-2 font-bold text-blue-600">{t.ticker}</td>
+                      <td className={`px-4 py-2 font-medium ${t.txn_type === 'buy' ? 'text-emerald-600' : 'text-red-600'}`}>
                         {t.txn_type?.toUpperCase()}
                       </td>
                       <td className="px-4 py-2 font-mono text-slate-700">{t.quantity}</td>
@@ -561,7 +561,7 @@ export default function CustomerDetail() {
                       </td>
                       <td className="px-4 py-2">
                         {t.flagged && (
-                          <span className="bg-red-800 text-red-200 text-xs px-1.5 py-0.5 rounded">⚑</span>
+                          <span className="bg-red-100 text-red-700 text-xs px-1.5 py-0.5 rounded">⚑</span>
                         )}
                       </td>
                     </tr>
