@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../App'
 import { apiFetch } from '../api/client'
 import AgentStatusTicker from '../components/AgentStatusTicker'
+import AgentDebate from '../components/AgentDebate'
 import LivePriceBadge from '../components/LivePriceBadge'
 import { useLivePrices } from '../hooks/useLivePrices'
 
@@ -84,6 +85,8 @@ export default function CustomerDetail() {
   const [predLoading, setPredLoading] = useState(false)
   const [showRawRF, setShowRawRF] = useState(false)
   const [rawRF, setRawRF] = useState(null)
+  const [debateResult, setDebateResult] = useState(null)
+  const [debateLoading, setDebateLoading] = useState(false)
 
   useEffect(() => {
     apiFetch(`/api/portfolio/${id}`, {}, token)
@@ -153,6 +156,23 @@ export default function CustomerDetail() {
         ],
         result: `Error: ${e.message}`,
       })
+    }
+  }
+
+  async function runDebate() {
+    setDebateLoading(true)
+    try {
+      const data = await apiFetch(`/api/agent/critic/${id}`, { method: 'POST' }, token)
+      setDebateResult(data.critic)
+      // Also populate predictions if market data came back
+      if (data.market?.portfolio_predictions) {
+        setPredictions(data.market)
+        if (data.market.raw_rf_top10) setRawRF(data.market.raw_rf_top10)
+      }
+    } catch (e) {
+      setDebateResult({ conflicts_found: 0, conflict_details: [], final_recommendation: `Error: ${e.message}`, agent_agreement: 'unknown', critic_confidence: 'low' })
+    } finally {
+      setDebateLoading(false)
     }
   }
 
@@ -437,6 +457,9 @@ export default function CustomerDetail() {
             </div>
           )}
         </div>
+
+        {/* Agent Debate */}
+        <AgentDebate result={debateResult} loading={debateLoading} onRun={runDebate} />
 
         {/* Loans */}
         {(loans || []).length > 0 && (

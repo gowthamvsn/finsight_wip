@@ -529,6 +529,20 @@ async def run_market_agent(customer_id: str, held_tickers: list, pool) -> dict:
         portfolio_predictions = []
         db_updates = []
 
+        # Fetch DB confidence values for held tickers (used as fallback)
+        db_confidence_cache = {}
+        if held_tickers:
+            db_conf_rows = await fetch_all(
+                "SELECT ticker, prediction_confidence, predicted_5d_pct FROM market_prices WHERE ticker = ANY($1::text[])",
+                held_tickers,
+            )
+            for r in db_conf_rows:
+                if r["prediction_confidence"] is not None:
+                    db_confidence_cache[r["ticker"]] = {
+                        "confidence": float(r["prediction_confidence"]),
+                        "predicted_5d_pct": float(r["predicted_5d_pct"] or 0),
+                    }
+
         if held_tickers:
             ohlcv = await asyncio.to_thread(_download_ohlcv, held_tickers)
 
@@ -537,8 +551,14 @@ async def run_market_agent(customer_id: str, held_tickers: list, pool) -> dict:
                 df = ohlcv.get(yf_sym)
 
                 if df is None or df.empty:
-                    logger.warning(f"No yfinance data for {db_ticker} ({yf_sym})")
-                    prob = 0.50
+                    # Fall back to cached DB prediction_confidence when yfinance is blocked
+                    if db_ticker in db_confidence_cache:
+                        cached = db_confidence_cache[db_ticker]
+                        prob = cached["confidence"] / 100.0
+                        logger.info(f"Using DB confidence fallback for {db_ticker}: {cached['confidence']}%")
+                    else:
+                        logger.warning(f"No yfinance data for {db_ticker} ({yf_sym})")
+                        prob = 0.50
                 else:
                     prob = await asyncio.to_thread(_predict_single, yf_sym, df)
                     if prob is None:

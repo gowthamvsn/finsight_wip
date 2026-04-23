@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from datetime import datetime, timezone
 
@@ -48,6 +49,46 @@ async def market_endpoint(
     held = await get_customer_tickers(customer_id, pool)
     from agents.market import run_market_agent
     return await run_market_agent(customer_id, held, pool)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Critic agent — runs Portfolio + Market in parallel then reconciles conflicts
+# ──────────────────────────────────────────────────────────────────────────────
+@router.post("/agent/critic/{customer_id}")
+async def critic_endpoint(
+    customer_id: str,
+    current_user: dict = Depends(get_customer_or_admin),
+):
+    pool = get_pool()
+    held = await get_customer_tickers(customer_id, pool)
+
+    from agents.portfolio import run_portfolio_agent
+    from agents.market import run_market_agent
+
+    portfolio_result, market_result = await asyncio.gather(
+        run_portfolio_agent(customer_id, pool),
+        run_market_agent(customer_id, held, pool),
+    )
+
+    customer = await fetch_one(
+        "SELECT risk_profile FROM customers WHERE customer_id=$1", customer_id
+    )
+    risk_profile = customer["risk_profile"] if customer else "moderate"
+
+    from agents.critic import run_critic_agent
+    critic_result = await run_critic_agent(
+        portfolio_analysis=portfolio_result.get("analysis", ""),
+        portfolio_holdings=portfolio_result.get("holdings", []),
+        market_predictions=market_result.get("portfolio_predictions", []),
+        customer_risk_profile=risk_profile,
+        pool=pool,
+    )
+
+    return {
+        "portfolio": portfolio_result,
+        "market": market_result,
+        "critic": critic_result,
+    }
 
 
 # ──────────────────────────────────────────────────────────────────────────────
