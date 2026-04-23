@@ -16,22 +16,22 @@ function fmtPct(n) {
 }
 
 const CAT_COLORS = {
-  groceries:      { bar: 'bg-green-500',   badge: 'bg-green-900 text-green-300'   },
-  dining:         { bar: 'bg-amber-500',   badge: 'bg-amber-900 text-amber-300'   },
-  transport:      { bar: 'bg-blue-500',    badge: 'bg-blue-900 text-blue-300'     },
-  utilities:      { bar: 'bg-gray-500',    badge: 'bg-gray-700 text-gray-300'     },
-  entertainment:  { bar: 'bg-purple-500',  badge: 'bg-purple-900 text-purple-300' },
-  healthcare:     { bar: 'bg-teal-500',    badge: 'bg-teal-900 text-teal-300'     },
-  shopping:       { bar: 'bg-orange-500',  badge: 'bg-orange-900 text-orange-300' },
-  travel:         { bar: 'bg-cyan-500',    badge: 'bg-cyan-900 text-cyan-300'     },
-  rent:           { bar: 'bg-red-500',     badge: 'bg-red-900 text-red-300'       },
-  insurance:      { bar: 'bg-rose-500',    badge: 'bg-rose-900 text-rose-300'     },
-  subscription:   { bar: 'bg-violet-500',  badge: 'bg-violet-900 text-violet-300' },
-  salary:         { bar: 'bg-emerald-500', badge: 'bg-emerald-900 text-emerald-300'},
-  interest_earned:{ bar: 'bg-lime-500',    badge: 'bg-lime-900 text-lime-300'     },
-  interest_paid:  { bar: 'bg-pink-500',    badge: 'bg-pink-900 text-pink-300'     },
-  investment:     { bar: 'bg-indigo-500',  badge: 'bg-indigo-900 text-indigo-300' },
-  other:          { bar: 'bg-gray-400',    badge: 'bg-gray-700 text-gray-400'     },
+  groceries:      { bar: 'bg-green-500',   badge: 'bg-green-100 text-green-700'   },
+  dining:         { bar: 'bg-amber-500',   badge: 'bg-amber-100 text-amber-700'   },
+  transport:      { bar: 'bg-blue-500',    badge: 'bg-blue-100 text-blue-700'     },
+  utilities:      { bar: 'bg-slate-400',   badge: 'bg-slate-100 text-slate-600'   },
+  entertainment:  { bar: 'bg-purple-500',  badge: 'bg-purple-100 text-purple-700' },
+  healthcare:     { bar: 'bg-teal-500',    badge: 'bg-teal-100 text-teal-700'     },
+  shopping:       { bar: 'bg-orange-500',  badge: 'bg-orange-100 text-orange-700' },
+  travel:         { bar: 'bg-cyan-500',    badge: 'bg-cyan-100 text-cyan-700'     },
+  rent:           { bar: 'bg-red-500',     badge: 'bg-red-100 text-red-700'       },
+  insurance:      { bar: 'bg-rose-500',    badge: 'bg-rose-100 text-rose-700'     },
+  subscription:   { bar: 'bg-violet-500',  badge: 'bg-violet-100 text-violet-700' },
+  salary:         { bar: 'bg-emerald-500', badge: 'bg-emerald-100 text-emerald-700'},
+  interest_earned:{ bar: 'bg-lime-500',    badge: 'bg-lime-100 text-lime-700'     },
+  interest_paid:  { bar: 'bg-pink-500',    badge: 'bg-pink-100 text-pink-700'     },
+  investment:     { bar: 'bg-indigo-500',  badge: 'bg-indigo-100 text-indigo-700' },
+  other:          { bar: 'bg-slate-400',   badge: 'bg-slate-100 text-slate-500'   },
 }
 
 function catColor(cat, type) {
@@ -42,10 +42,10 @@ function catColor(cat, type) {
 
 function MetricCard({ label, value, sub, color }) {
   return (
-    <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-      <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{label}</p>
+    <div className="bg-white rounded-xl p-4 border border-slate-200">
+      <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">{label}</p>
       <p className={`text-xl font-bold ${color || 'text-white'}`}>{value}</p>
-      {sub && <p className="text-xs text-gray-500 mt-0.5">{sub}</p>}
+      {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
     </div>
   )
 }
@@ -60,22 +60,22 @@ function AccountCard({ acc }) {
   }
   const isNeg = parseFloat(acc.balance) < 0
   return (
-    <div className="bg-gray-900 rounded-xl p-4 border border-gray-800 flex flex-col gap-1">
+    <div className="bg-white rounded-xl p-4 border border-slate-200 flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
           {acc.bank_name}
         </span>
-        <span className="text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">
+        <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded">
           {typeLabel[acc.account_type] || acc.account_type}
         </span>
       </div>
       <p className={`text-lg font-bold ${isNeg ? 'text-red-400' : 'text-white'}`}>
         {fmtUSD(parseFloat(acc.balance))}
       </p>
-      <p className="text-xs text-gray-500">Account {acc.account_number}</p>
+      <p className="text-xs text-slate-400">Account {acc.account_number}</p>
       {acc.interest_rate && (
-        <p className="text-xs text-gray-500">
-          Rate: <span className="text-gray-300">{acc.interest_rate}% APR</span>
+        <p className="text-xs text-slate-400">
+          Rate: <span className="text-slate-700">{acc.interest_rate}% APR</span>
         </p>
       )}
     </div>
@@ -86,18 +86,18 @@ function SpendingBar({ item, maxSpent }) {
   const pct = maxSpent > 0 ? (item.total_spent / maxSpent) * 100 : 0
   return (
     <div className="flex items-center gap-3 py-1.5">
-      <span className="text-xs text-gray-400 w-28 shrink-0 capitalize">
+      <span className="text-xs text-slate-500 w-28 shrink-0 capitalize">
         {item.category.replace('_', ' ')}
       </span>
-      <div className="flex-1 bg-gray-800 rounded-full h-2 overflow-hidden">
+      <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
         <div
           className={`h-2 rounded-full ${catColor(item.category, 'bar')}`}
           style={{ width: `${Math.min(pct, 100)}%` }}
         />
       </div>
-      <span className="text-xs text-gray-300 w-24 text-right shrink-0">
+      <span className="text-xs text-slate-700 w-24 text-right shrink-0">
         {fmtUSD(item.total_spent)}{' '}
-        <span className="text-gray-600">({item.pct_of_spending}%)</span>
+        <span className="text-slate-400">({item.pct_of_spending}%)</span>
       </span>
       {item.vs_last_month !== 0 && (
         <span className={`text-xs w-14 text-right shrink-0 ${item.vs_last_month > 0 ? 'text-red-400' : 'text-green-400'}`}>
@@ -108,32 +108,34 @@ function SpendingBar({ item, maxSpent }) {
   )
 }
 
+const BAR_MAX_PX = 96
+
 function MonthlyTrendBars({ trend }) {
   if (!trend || trend.length === 0) return null
-  const maxVal = Math.max(...trend.flatMap(t => [t.income, t.spending]))
+  const maxVal = Math.max(...trend.flatMap(t => [t.income, t.spending]), 1)
   return (
-    <div className="flex items-end gap-4 h-32">
-      {trend.map(t => (
-        <div key={t.period} className="flex-1 flex flex-col items-center gap-1">
-          <div className="w-full flex items-end gap-1 h-24">
-            <div className="flex-1 flex flex-col justify-end">
+    <div className="flex items-end gap-6">
+      {trend.map(t => {
+        const incH  = Math.max(4, Math.round((t.income   / maxVal) * BAR_MAX_PX))
+        const expH  = Math.max(4, Math.round((t.spending / maxVal) * BAR_MAX_PX))
+        return (
+          <div key={t.period} className="flex-1 flex flex-col items-center gap-2">
+            <div className="flex items-end gap-1 w-full" style={{ height: BAR_MAX_PX }}>
               <div
-                className="w-full bg-emerald-600 rounded-t"
-                style={{ height: `${(t.income / maxVal) * 100}%` }}
+                className="flex-1 bg-emerald-600 rounded-t cursor-default"
+                style={{ height: incH }}
                 title={`Income: ${fmtUSD(t.income)}`}
               />
-            </div>
-            <div className="flex-1 flex flex-col justify-end">
               <div
-                className="w-full bg-red-600 rounded-t"
-                style={{ height: `${(t.spending / maxVal) * 100}%` }}
+                className="flex-1 bg-red-600 rounded-t cursor-default"
+                style={{ height: expH }}
                 title={`Spending: ${fmtUSD(t.spending)}`}
               />
             </div>
+            <span className="text-xs text-slate-400">{t.period}</span>
           </div>
-          <span className="text-xs text-gray-500">{t.period}</span>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
@@ -198,7 +200,7 @@ export default function SpendingDashboard({ customerId, token }) {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center py-20 text-gray-500">Loading banking data…</div>
+    <div className="flex items-center justify-center py-20 text-slate-400">Loading banking data…</div>
   )
   if (error) return (
     <div className="text-red-400 text-sm p-4">{error}</div>
@@ -215,7 +217,7 @@ export default function SpendingDashboard({ customerId, token }) {
     <div className="space-y-6">
 
       {/* Simulated data disclaimer */}
-      <div className="bg-blue-950 border border-blue-800 rounded-lg px-4 py-3 text-xs text-blue-300 flex items-start gap-2">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-xs text-blue-700 flex items-start gap-2">
         <span className="mt-0.5">ℹ</span>
         <span>
           Bank transaction data is <strong>simulated</strong> for demonstration purposes.
@@ -226,7 +228,7 @@ export default function SpendingDashboard({ customerId, token }) {
 
       {/* SECTION 1 — Account Cards */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">Linked Accounts</h3>
+        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Linked Accounts</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {accounts.map(acc => <AccountCard key={acc.account_id} acc={acc} />)}
         </div>
@@ -235,7 +237,7 @@ export default function SpendingDashboard({ customerId, token }) {
       {/* SECTION 2 — Monthly cashflow summary */}
       {summary && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
             This Month — {summary.period}
           </h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -251,8 +253,8 @@ export default function SpendingDashboard({ customerId, token }) {
 
       {/* SECTION 3 — Spending by category */}
       {spendingCats.length > 0 && (
-        <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-          <h3 className="text-sm font-semibold text-gray-300 mb-4">Spending by Category</h3>
+        <div className="bg-white rounded-xl p-5 border border-slate-200">
+          <h3 className="text-sm font-semibold text-slate-700 mb-4">Spending by Category</h3>
           <div className="space-y-0.5">
             {spendingCats.map(item => (
               <SpendingBar key={item.category} item={item} maxSpent={maxSpent} />
@@ -263,9 +265,9 @@ export default function SpendingDashboard({ customerId, token }) {
 
       {/* SECTION 4 — 3-month trend */}
       {summary?.monthly_trend?.length > 0 && (
-        <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-          <h3 className="text-sm font-semibold text-gray-300 mb-4">3-Month Cashflow Trend</h3>
-          <div className="flex gap-4 text-xs text-gray-500 mb-3">
+        <div className="bg-white rounded-xl p-5 border border-slate-200">
+          <h3 className="text-sm font-semibold text-slate-700 mb-4">3-Month Cashflow Trend</h3>
+          <div className="flex gap-4 text-xs text-slate-400 mb-3">
             <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-600 inline-block"/>Income</span>
             <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-600 inline-block"/>Spending</span>
           </div>
@@ -275,15 +277,15 @@ export default function SpendingDashboard({ customerId, token }) {
 
       {/* SECTION 5 — Interest tracker */}
       {summary && (
-        <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
-          <h3 className="text-sm font-semibold text-gray-300 mb-4">Interest Tracker (last 3 months)</h3>
+        <div className="bg-white rounded-xl p-5 border border-slate-200">
+          <h3 className="text-sm font-semibold text-slate-700 mb-4">Interest Tracker (last 3 months)</h3>
           <div className="flex gap-6 flex-wrap">
             <div>
-              <p className="text-xs text-gray-500 mb-1">Interest Earned</p>
+              <p className="text-xs text-slate-400 mb-1">Interest Earned</p>
               <p className="text-xl font-bold text-green-400">{fmtUSD(summary.interest_earned_ytd)}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 mb-1">Interest Paid</p>
+              <p className="text-xs text-slate-400 mb-1">Interest Paid</p>
               <p className="text-xl font-bold text-red-400">{fmtUSD(summary.interest_paid_ytd)}</p>
             </div>
             <div className="self-end pb-1">
@@ -297,9 +299,9 @@ export default function SpendingDashboard({ customerId, token }) {
       )}
 
       {/* SECTION 6 — AI Spending Analysis */}
-      <div className="bg-gray-900 rounded-xl p-5 border border-gray-800">
+      <div className="bg-white rounded-xl p-5 border border-slate-200">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-gray-300">AI Spending Analysis</h3>
+          <h3 className="text-sm font-semibold text-slate-700">AI Spending Analysis</h3>
           <button
             onClick={handleAnalyze}
             disabled={analyzing}
@@ -313,7 +315,7 @@ export default function SpendingDashboard({ customerId, token }) {
         {analysisSteps.length > 0 && <AgentStatusTicker steps={analysisSteps} />}
 
         {analysis && (
-          <div className="mt-4 bg-gray-950 rounded-lg p-4 text-sm text-gray-300 leading-relaxed whitespace-pre-wrap border border-gray-800">
+          <div className="mt-4 bg-slate-50 rounded-lg p-4 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap border border-slate-200">
             {analysis}
           </div>
         )}
@@ -323,7 +325,7 @@ export default function SpendingDashboard({ customerId, token }) {
         )}
 
         {!analysis && !analyzing && !analysisSteps.length && (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-slate-400">
             Click the button above to get a personalized GPT-4o analysis of your spending patterns,
             savings opportunities, and interest optimization.
           </p>
@@ -331,13 +333,13 @@ export default function SpendingDashboard({ customerId, token }) {
       </div>
 
       {/* SECTION 7 — Recent bank transactions */}
-      <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-        <div className="px-5 py-3 border-b border-gray-800">
-          <h3 className="text-sm font-semibold text-gray-300">Recent Bank Transactions</h3>
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="px-5 py-3 border-b border-slate-200">
+          <h3 className="text-sm font-semibold text-slate-700">Recent Bank Transactions</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-800 text-gray-400 text-xs uppercase">
+            <thead className="bg-slate-100 text-slate-500 text-xs uppercase">
               <tr>
                 {['Date', 'Merchant', 'Category', 'Amount', 'Dir'].map(h => (
                   <th key={h} className="px-4 py-2 text-left">{h}</th>
@@ -346,11 +348,11 @@ export default function SpendingDashboard({ customerId, token }) {
             </thead>
             <tbody className="divide-y divide-gray-800">
               {txns.map(t => (
-                <tr key={t.txn_id} className="hover:bg-gray-800/50 transition-colors">
-                  <td className="px-4 py-2 text-gray-500 text-xs whitespace-nowrap">
+                <tr key={t.txn_id} className="hover:bg-slate-100/50 transition-colors">
+                  <td className="px-4 py-2 text-slate-400 text-xs whitespace-nowrap">
                     {t.txn_date ? new Date(t.txn_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
                   </td>
-                  <td className="px-4 py-2 text-gray-300 max-w-[150px] truncate">
+                  <td className="px-4 py-2 text-slate-700 max-w-[150px] truncate">
                     {t.merchant || t.description}
                   </td>
                   <td className="px-4 py-2">

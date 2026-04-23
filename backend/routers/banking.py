@@ -162,6 +162,67 @@ async def get_spending_summary(
     }
 
 
+# ── GET leaderboard (admin) ───────────────────────────────────────────────────
+
+@router.get("/leaderboard")
+async def get_leaderboard(
+    current_user: dict = Depends(get_customer_or_admin),
+):
+    """Top 5 spenders, top 5 savers, top 5 portfolios — for admin dashboard."""
+    from db.connection import fetch_all as fa
+
+    period_expr = "TO_CHAR(NOW(), 'YYYY-MM')"
+
+    top_spenders = await fa(f"""
+        SELECT c.customer_id, c.first_name || ' ' || c.last_name AS name,
+               c.advisor_tier,
+               COALESCE(SUM(ss.total_spent), 0)  AS monthly_spending,
+               COALESCE(SUM(ss.total_earned), 0) AS monthly_income
+        FROM customers c
+        LEFT JOIN spending_summary ss
+               ON c.customer_id = ss.customer_id AND ss.period = {period_expr}
+        GROUP BY c.customer_id, name, c.advisor_tier
+        ORDER BY monthly_spending DESC
+        LIMIT 5
+    """)
+
+    top_savers = await fa(f"""
+        SELECT c.customer_id, c.first_name || ' ' || c.last_name AS name,
+               c.advisor_tier,
+               COALESCE(SUM(ss.total_earned), 0) AS monthly_income,
+               COALESCE(SUM(ss.total_spent), 0)  AS monthly_spending,
+               CASE WHEN COALESCE(SUM(ss.total_earned), 0) > 0
+                    THEN ROUND(
+                        (COALESCE(SUM(ss.total_earned), 0) - COALESCE(SUM(ss.total_spent), 0))
+                        / SUM(ss.total_earned) * 100, 1)
+                    ELSE 0 END AS savings_rate
+        FROM customers c
+        LEFT JOIN spending_summary ss
+               ON c.customer_id = ss.customer_id AND ss.period = {period_expr}
+        GROUP BY c.customer_id, name, c.advisor_tier
+        HAVING COALESCE(SUM(ss.total_earned), 0) > 0
+        ORDER BY savings_rate DESC
+        LIMIT 5
+    """)
+
+    top_portfolios = await fa("""
+        SELECT cs.customer_id, c.first_name || ' ' || c.last_name AS name,
+               c.risk_profile, c.advisor_tier,
+               COALESCE(cs.portfolio_value, 0) AS portfolio_value,
+               COALESCE(cs.net_pl, 0) AS net_pl
+        FROM customer_summary cs
+        JOIN customers c ON cs.customer_id = c.customer_id
+        ORDER BY cs.portfolio_value DESC
+        LIMIT 5
+    """)
+
+    return {
+        "top_spenders":   [dict(r) for r in top_spenders],
+        "top_savers":     [dict(r) for r in top_savers],
+        "top_portfolios": [dict(r) for r in top_portfolios],
+    }
+
+
 # ── POST analyze-spending ─────────────────────────────────────────────────────
 
 @router.post("/{customer_id}/analyze-spending")
