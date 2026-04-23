@@ -46,6 +46,66 @@ FastAPI (AKS · 2 replicas)
 
 ---
 
+## Everything This App Can Do
+
+| # | Feature | Where | What happens |
+|---|---|---|---|
+| 1 | Login (admin) | `/` → `/admin` | Email + password → JWT issued → routed to admin dashboard |
+| 2 | Login (customer) | `/` → `/portfolio` | Same flow → routed to customer portfolio page |
+| 3 | View all 50 customers | Admin dashboard | Table sorted by portfolio value with risk badge, tier badge, buy/sell volume, alert count |
+| 4 | Live portfolio value ticks | Admin dashboard | Every 60s price update flashes customer rows green/red via WebSocket |
+| 5 | AUM & alert metric cards | Admin dashboard | Total AUM, open alerts, high-severity count — aggregated live |
+| 6 | Buy/sell volume cards | Admin dashboard | 30-day buy volume and sell volume across all customers |
+| 7 | Leaderboard | Admin dashboard | Top 5 spenders, top 5 savers by savings rate, top 5 portfolios |
+| 8 | Real-time alert sidebar | Admin dashboard | Fraud and risk alerts slide in live as they are created; colour-coded by severity |
+| 9 | Navigate to customer detail | Admin dashboard | "View" button → full customer drilldown page |
+| 10 | Customer portfolio overview | Customer / Admin detail | Portfolio value, net worth, net P&L, cash balance — 4 metric cards |
+| 11 | P&L breakdown vs S&P 500 | Customer / Admin detail | Gross gains, interest paid, net P&L, annualised return vs benchmark, `beating_market` flag |
+| 12 | Holdings table | Customer / Admin detail | Ticker, type, qty, avg buy price, live current price, current value, unrealized P&L % (green/red) |
+| 13 | Live price flashing | Customer / Admin detail | Price badge flashes green or red for 600ms on every WebSocket update |
+| 14 | Market news per holding | Customer / Admin detail | One article per held ticker from NewsAPI.org; Gemini 2.0 Flash fallback if quota exceeded |
+| 15 | Actions needed panel | Customer portfolio | Overdue/upcoming loan due dates + high-severity open alerts in one panel |
+| 16 | Get wealth snapshot | Customer portfolio | Runs Portfolio agent + Spending Analyst in parallel; returns two 50-word briefs side by side |
+| 17 | Run portfolio analysis | Customer / Admin detail | Claude Haiku analyses holdings, risk concentration, rebalancing suggestions (full report mode) |
+| 18 | Run market predictions | Customer / Admin detail | Random Forest scores 800+ tickers → top signals shown with confidence bars and signal badges |
+| 19 | Raw RF output table | Customer / Admin detail | Collapsible table showing all 14 binary indicator flags + raw/calibrated probability per ticker |
+| 20 | Run agent debate | Customer / Admin detail | Portfolio + Market agents run in parallel → Critic detects conflicts → final arbitration verdict |
+| 21 | Conflict cards | Customer / Admin detail | Per-ticker amber cards showing Portfolio signal vs Market signal when they disagree |
+| 22 | Generate report | Admin detail | Claude Haiku writes 6-section advisory report → saved to Azure Blob Storage → URL returned |
+| 23 | AgentStatusTicker | Customer / Admin detail | Step-by-step pipeline display with pending/running/done/error states and duration in ms |
+| 24 | Submit a transaction | Customer portfolio | 3-step modal: pick type/ticker/qty/country → fraud scored → insert or OTP challenge |
+| 25 | OTP challenge flow | Customer portfolio | Suspicious transaction triggers email OTP → amber warning card → 6-digit input → confirmed |
+| 26 | Demo OTP | Customer portfolio | `demo_otp` shown in UI so reviewers can complete the flow without a real inbox |
+| 27 | Loans table | Customer / Admin detail | Outstanding balance, rate %, EMI, due date; overdue rows highlighted red |
+| 28 | Recent alerts | Customer / Admin detail | Last 5 open alerts with severity badge |
+| 29 | Support chat | Customer portfolio | Floating chat widget (bottom-right) → GPT-4o answers questions about the customer's own account |
+| 30 | Banking & spending tab | Customer / Admin detail | Full banking analytics on a second tab alongside the portfolio |
+| 31 | Bank accounts view | Banking tab | Linked account cards showing account type, balance, and account number |
+| 32 | Recent bank transactions | Banking tab | Last 90 days of bank transactions filterable by category |
+| 33 | Cashflow metric cards | Banking tab | Monthly income, spending, net cashflow, savings rate — colour-coded |
+| 34 | Category breakdown chart | Banking tab | 16 spending categories with horizontal bars and month-over-month % change |
+| 35 | 3-month trend chart | Banking tab | Green income bars vs red spending bars per month |
+| 36 | Interest tracker | Banking tab | Interest earned (savings) vs interest paid (loans) with advisory text |
+| 37 | AI spending analysis | Banking tab | GPT-4o analyses patterns and gives personalised cashflow recommendations |
+| 38 | Fraud detection (auto) | Background | Every new transaction scored by Isolation Forest + 6 rules before insert |
+| 39 | OTP email | Background | Azure Communication Services sends 6-digit OTP to customer email on flagged transaction |
+| 40 | Fraud alert email | Background | High/critical fraud alerts trigger an email to the ops mailbox |
+| 41 | Risk breach alert | Background | PostgreSQL trigger fires `risk_breach` alert if crypto% exceeds the customer's risk profile limit |
+| 42 | Alert status update | Admin detail | Admins can change alert status (open → investigating → resolved → dismissed) |
+| 43 | Demo fraud trigger | Admin detail | Admin button inserts a live BTC transfer from Nigeria at 02:00 UTC and runs the full fraud pipeline |
+| 44 | Orchestrator routing | API | Natural language query → GPT-4o decides which sub-agents to call → results combined |
+| 45 | WebSocket live prices | Everywhere | pg_notify → asyncpg → FastAPI → all connected clients updated every 60s without polling |
+| 46 | WebSocket alert feed | Admin dashboard | New fraud/risk alerts pushed to all connected admin sessions in real time |
+| 47 | Exponential backoff reconnect | Everywhere | WebSocket drops → client retries at 1s → 2s → 4s → 8s → 16s → 30s cap |
+| 48 | Prompt injection blocking | All agent inputs | 13 banned phrases, control char stripping, 2000-char limit enforced before any LLM call |
+| 49 | Customer data isolation | All routes | Every DB query scoped to the authenticated customer's ID; no cross-customer data leakage |
+| 50 | Role-based route guards | All routes | FastAPI `Depends` checks JWT role on every endpoint; customers cannot reach admin routes |
+| 51 | Health endpoint | Backend | `GET /health` checks DB connectivity and scheduler status; used by AKS liveness probe |
+| 52 | High availability | AKS | 2 replicas each for backend and frontend; one pod can die with zero downtime |
+| 53 | Automated tests (10) | CI | Covers guardrails, JWT, bcrypt, critic logic, random walk bounds — zero external dependencies |
+
+---
+
 ## Complete Feature List
 
 ### Auth & Access
@@ -77,6 +137,16 @@ FastAPI (AKS · 2 replicas)
 | Cash auto-update on trades | `trg_cash_on_txn` AFTER INSERT trigger: buy deducts cost, sell adds proceeds |
 | Realized P&L | Computed at sell time: `(sell_price − avg_buy) × qty`, stored in `transactions.realized_pl` |
 | P&L vs S&P 500 | Annualised return compared to benchmark; `beating_market` boolean shown in UI |
+
+---
+
+### Market News
+| Feature | How |
+|---|---|
+| Per-holding news | `GET /api/portfolio/{id}/news` fetches one article per held ticker (up to 8) |
+| Primary source | NewsAPI.org — live headlines with source name and published date |
+| Fallback | Gemini 2.0 Flash generates a summary article when NewsAPI quota is exceeded or key is missing |
+| Display | One card per holding on the customer portfolio page between Actions Needed and Portfolio Analysis |
 
 ---
 
