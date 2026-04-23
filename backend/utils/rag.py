@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 import re
 import time
@@ -7,6 +8,8 @@ from google import genai as google_genai
 from google.genai import types as google_types
 from langchain_core.embeddings import Embeddings
 from langchain_postgres import PGVector
+
+logger = logging.getLogger("utils.rag")
 
 RAG_TICKERS = {"NVDA", "TSLA", "AAPL", "MSFT", "AMZN", "GOOGL", "META"}
 
@@ -61,8 +64,9 @@ class GeminiEmbeddings(Embeddings):
 def _get_store() -> PGVector:
     global _store
     if _store is None:
-        url = os.getenv("DATABASE_URL", "")
+        url  = os.getenv("DATABASE_URL", "")
         conn = re.sub(r"^postgres(ql)?://", "postgresql+psycopg://", url)
+        logger.info(f"RAG: building PGVector store, conn prefix={conn[:30]}")
         _store = PGVector(
             embeddings=GeminiEmbeddings(api_key=os.getenv("GEMINI_API_KEY", "")),
             collection_name="finsight_filings",
@@ -80,18 +84,30 @@ def detect_tickers(text: str) -> set[str]:
     return found
 
 
+def _search(store: PGVector, query: str, top_k: int, tickers: list[str]):
+    # Try with ticker filter first, fall back to unfiltered if it errors
+    try:
+        filter_expr = {"ticker": {"$in": tickers}}
+        return store.similarity_search(query, k=top_k, filter=filter_expr)
+    except Exception as e:
+        logger.warning(f"RAG: filtered search failed ({e}), trying unfiltered")
+        docs = store.similarity_search(query, k=top_k)
+        # manually filter to relevant tickers
+        return [d for d in docs if d.metadata.get("ticker") in tickers]
+
+
 async def retrieve_context(query: str, held_tickers: set[str], top_k: int = 4) -> list[dict]:
     mentioned = detect_tickers(query)
     tickers   = list(mentioned & RAG_TICKERS)
+    logger.info(f"RAG: query='{query[:60]}' detected={mentioned} searching={tickers}")
+
     if not tickers:
         return []
 
     try:
-        store       = _get_store()
-        filter_expr = {"ticker": {"$in": tickers}}
-        docs        = await asyncio.to_thread(
-            store.similarity_search, query, top_k, filter_expr
-        )
+        store = _get_store()
+        docs  = await asyncio.to_thread(_search, store, query, top_k, tickers)
+        logger.info(f"RAG: retrieved {len(docs)} chunks for {tickers}")
         return [
             {
                 "ticker":  d.metadata.get("ticker", ""),
@@ -100,5 +116,6 @@ async def retrieve_context(query: str, held_tickers: set[str], top_k: int = 4) -
             }
             for d in docs
         ]
-    except Exception:
+    except Exception as e:
+        logger.error(f"RAG: retrieval failed — {e}", exc_info=True)
         return []
