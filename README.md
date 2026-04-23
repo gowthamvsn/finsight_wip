@@ -2,7 +2,7 @@
 
 A production-grade wealth management platform combining multiple LLMs, ML models, real-time price feeds, fraud detection, and OTP-gated transactions — deployed on Azure Kubernetes Service.
 
-**Live URL:** http://finsight-demo.centralus.cloudapp.azure.com
+**Live URL:** https://finsight-demo.centralus.cloudapp.azure.com
 
 **Demo credentials:**
 - Admin: `priya@finsight.com` / `Admin@123`
@@ -17,7 +17,7 @@ Browser (React 18 + Vite)
     │
     │  HTTP/WebSocket
     ▼
-nginx (LoadBalancer · finsight-demo.centralus.cloudapp.azure.com)
+nginx-ingress + TLS · finsight-demo.centralus.cloudapp.azure.com
     │
     │  /api/*  /ws/*
     ▼
