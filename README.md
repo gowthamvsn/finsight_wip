@@ -6,7 +6,7 @@ A production-grade wealth management platform combining multiple LLMs, ML models
 
 **Demo credentials:**
 - Admin: `priya@finsight.com` / `Admin@123`
-- Customer: `arjun@example.com` / `Customer@123`
+- Customer: `arjun.meh@gmail.com` / `Customer@123`
 
 ---
 
