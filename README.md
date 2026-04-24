@@ -29,11 +29,10 @@ FastAPI (AKS · 2 replicas)
     │                                                                      │
     │                                                              WebSocket push
     │                                                                      │
-    ├── 8 AI Agents ────────────────────────────────────────────────► React live tick
-    │   ├── Orchestrator      (Azure GPT-4o)
+    ├── 7 AI Agents ────────────────────────────────────────────────► React live tick
     │   ├── Portfolio         (Claude Haiku)
     │   ├── Market            (Gemini 2.0 Flash + Random Forest)
-    │   ├── Critic            (Claude Haiku)
+    │   ├── Critic            (Claude Haiku — weighs Portfolio + Market, final verdict)
     │   ├── Report            (Claude Haiku)
     │   ├── Support Chat      (Azure GPT-4o)
     │   ├── Spending Analyst  (Azure GPT-4o)
@@ -93,7 +92,7 @@ FastAPI (AKS · 2 replicas)
 | 41 | Risk breach alert | Background | PostgreSQL trigger fires `risk_breach` alert if crypto% exceeds the customer's risk profile limit |
 | 42 | Alert status update | Admin detail | Admins can change alert status (open → investigating → resolved → dismissed) |
 | 43 | Demo fraud trigger | Admin detail | Admin button inserts a live BTC transfer from Nigeria at 02:00 UTC and runs the full fraud pipeline |
-| 44 | Orchestrator routing | API | Natural language query → GPT-4o decides which sub-agents to call → results combined |
+| 44 | Critic arbitration | Customer / Admin detail | Portfolio + Market agents run in parallel → Critic (Claude Haiku) weighs both and produces a final balanced recommendation |
 | 45 | WebSocket live prices | Everywhere | pg_notify → asyncpg → FastAPI → all connected clients updated every 60s without polling |
 | 46 | WebSocket alert feed | Admin dashboard | New fraud/risk alerts pushed to all connected admin sessions in real time |
 | 47 | Exponential backoff reconnect | Everywhere | WebSocket drops → client retries at 1s → 2s → 4s → 8s → 16s → 30s cap |
@@ -172,14 +171,13 @@ FastAPI (AKS · 2 replicas)
 
 ---
 
-### 8 AI Agents
+### 7 AI Agents
 
 | Agent | LLM / Model | Responsibility |
 |---|---|---|
-| Orchestrator | Azure GPT-4o | Routes queries to sub-agents via LLM reasoning + keyword fallback |
 | Portfolio | Claude Haiku | Analyses holdings, risk concentration, rebalancing; full or 50-word snapshot mode |
 | Market | Gemini 2.0 Flash + RF | 14-flag Random Forest signals across 800+ tickers; narrative from Gemini |
-| Critic | Claude Haiku | Detects Portfolio vs Market conflicts per ticker; issues final arbitration verdict |
+| Critic | Claude Haiku | Receives Portfolio + Market outputs, weighs both perspectives, produces final balanced recommendation |
 | Report | Claude Haiku | Generates 6-section advisory report; saves to Azure Blob Storage |
 | Support Chat | Azure GPT-4o | Answers customer questions in context of their own holdings, alerts, transactions, loans |
 | Spending Analyst | Azure GPT-4o | Analyses bank transactions, cashflow, savings rate, category breakdowns; snapshot mode |
@@ -191,7 +189,7 @@ FastAPI (AKS · 2 replicas)
 
 - **Claude Haiku** — portfolio analysis, critic arbitration, report writing. Fast and cost-efficient on structured data tasks.
 - **Gemini 2.0 Flash** — market data narrative. 1M-token context handles bulk OHLCV history in a single call.
-- **Azure GPT-4o** — orchestration, support chat, spending analysis. Strong multi-turn reasoning and instruction-following.
+- **Azure GPT-4o** — support chat and spending analysis. Strong multi-turn reasoning and instruction-following.
 - **Random Forest** — stock signal predictions. Deterministic and interpretable; 14 binary technical indicator flags; feature importance is auditable.
 - **Isolation Forest** — fraud detection. No LLM. Fraud decisions must be reproducible and justifiable in a compliance review.
 
